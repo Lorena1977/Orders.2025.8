@@ -27,6 +27,9 @@ builder.Services.AddScoped<ICountriesUnitOfWork, CountriesUnitOfWork>();
 builder.Services.AddScoped<IStatesRepository, StatesRepository>();
 builder.Services.AddScoped<IStatesUnitOfWork, StatesUnitOfWork>();
 
+//81. Agregamos las nuevas inyecciones de las ciudades
+builder.Services.AddScoped<ICitiesRepository, CitiesRepository>();
+builder.Services.AddScoped<ICitiesUnitOfWork, CitiesUnitOfWork>();
 
 //24. Inyectamos el SeedDb
 builder.Services.AddTransient<SeedDb>();

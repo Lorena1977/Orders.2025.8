@@ -1,4 +1,5 @@
-﻿using Orders.Shared.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using Orders.Shared.Entities;
 
 namespace Orders.Backend.Data
 {
@@ -15,10 +16,12 @@ namespace Orders.Backend.Data
         public async Task SeedAsync()
         {
             await _context.Database.EnsureCreatedAsync();//Si no existe la base de datos la crea
-            //si existe la base de datos y tiene asiganciones pendiente, las hace, si no tiene actualizaciones
-            //pendietes no hace nada.
-            await CheckCountriesAsync();//Método para que garantice que tenemos Countries.
+                                                         //si existe la base de datos y tiene asiganciones pendiente, las hace, si no tiene actualizaciones
+                                                         //pendietes no hace nada.
+            await CheckCountriesFullAsync(); //Método para cagar los paises estados y ciudades del fichero sql de la carpeta Data
+            await CheckCountriesAsync();//Método para que garantice que tenemos Countries. (Por si falla el de arriba)
             await CheckCategoriesAsync();//Método para que se garantice que tenemos entidades.
+          
         }
 
         //Implementamos los métodos
@@ -107,6 +110,15 @@ namespace Orders.Backend.Data
 
             await _context.SaveChangesAsync();
         }
-    }
+        private async Task CheckCountriesFullAsync()
+        {
+            if (!_context.Countries.Any())
+            {
+                var countriesSQLScript = File.ReadAllText("Data\\CountriesStatesCities.sql");
+                await _context.Database.ExecuteSqlRawAsync(countriesSQLScript);
+            }
+        }
 
+
+    }
 }

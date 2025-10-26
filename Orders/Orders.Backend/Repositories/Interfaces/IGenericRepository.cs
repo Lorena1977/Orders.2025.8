@@ -1,4 +1,5 @@
-﻿using Orders.Shared.Responses;
+﻿using Orders.Shared.DTOs;
+using Orders.Shared.Responses;
 
 namespace Orders.Backend.Repositories.Interfaces
 {
@@ -14,6 +15,11 @@ namespace Orders.Backend.Repositories.Interfaces
         Task<ActionResponse<T>> DeleteAsync(int id);//Paso un ide y lo borra de la base de datos
 
         Task<ActionResponse<T>> UpdateAsync(T entity);//paso un id y  me actualiza la base de datos
+
+        Task<ActionResponse<IEnumerable<T>>> GetAsync(PaginationDTO pagination);//Añado la paginación al Get
+
+        Task<ActionResponse<int>> GetTotalRecordsAsync(PaginationDTO pagination);//Añado la paginacion al total de registros (aquí necesito el Id)
+
     }
 
 }

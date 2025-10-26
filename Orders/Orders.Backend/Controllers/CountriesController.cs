@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Orders.Backend.Data;
 using Orders.Backend.UnitsOfWork.Interfaces;
+using Orders.Shared.DTOs;
 using Orders.Shared.Entities;
 
 namespace Orders.Backend.Controllers
@@ -41,6 +42,20 @@ namespace Orders.Backend.Controllers
             }
             return NotFound(response.Message);
         }
+
+        //Añade el Get para que muestre los paises paginados.
+        [HttpGet("paginated")]
+        public override async Task<IActionResult> GetAsync(PaginationDTO pagination)
+        {
+            var response = await _countriesUnitOfWork.GetAsync(pagination);
+            if (response.WasSuccess)
+            {
+                return Ok(response.Result);
+            }
+            return BadRequest();
+        }
+
+
     }
 
     ////Creamos el constructor de la clase y le inyectamos al constructor la bas de datos
