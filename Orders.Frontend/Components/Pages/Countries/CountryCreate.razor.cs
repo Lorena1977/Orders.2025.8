@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using Orders.Frontend.Repositories;
@@ -12,6 +13,7 @@ namespace Orders.Frontend.Components.Pages.Countries
         [Inject] private IRepository Repository { get; set; } = null!;
         [Inject] private NavigationManager NavigationManager { get; set; } = null!;
         [Inject] private ISnackbar Snackbar { get; set; } = null!;
+        [Authorize(Roles = "Admin")]
 
         private async Task CreateAsync()
         {

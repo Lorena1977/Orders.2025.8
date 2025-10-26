@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using Orders.Frontend.Components.Pages.Shared;
@@ -23,7 +24,7 @@ namespace Orders.Frontend.Components.Pages.Categories
         [Inject] private NavigationManager NavigationManager { get; set; } = null!;
 
         [Parameter, SupplyParameterFromQuery] public string Filter { get; set; } = string.Empty;
-
+        [Authorize(Roles = "Admin")]
         protected override async Task OnInitializedAsync()
         {
             await LoadTotalRecordsAsync();

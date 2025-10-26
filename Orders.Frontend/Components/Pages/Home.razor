@@ -1,5 +1,14 @@
 ﻿@page "/"
 
-<PageTitle>Orders</PageTitle>
+<PageTitle>Inicio</PageTitle>
 
-<MudText Typo="Typo.h3" GutterBottom="true">Bienvenido a Orders</MudText>
+<AuthorizeView Roles="Admin">
+    <Authorized>
+        <MudText Typo="Typo.h3" Class="m-2" GutterBottom="true">Estas autenticado y autorizado, @context.User.Identity?.Name</MudText>
+    </Authorized>
+    <NotAuthorized>
+        <MudText Typo="Typo.h3" Class="m-2" GutterBottom="true">No estas autenticado</MudText>
+    </NotAuthorized>
+</AuthorizeView>
+
+<MudText Class="m-2">Orders sistema de pedidos ejemplo para el curso de Servicios WEB 2025-II</MudText>

@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Orders.Backend.Data;
 using Orders.Backend.UnitsOfWork.Interfaces;
@@ -9,6 +11,7 @@ namespace Orders.Backend.Controllers
 {
     [ApiController] //Le indicamos que es un API controller
     [Route("api/[controller]")]//Lo ruteamos
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 
 
     //Como hemos creado genéricos, actualizamos este controlador por el genérico.

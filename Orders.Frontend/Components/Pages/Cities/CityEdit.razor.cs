@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using Orders.Frontend.Repositories;
@@ -14,6 +15,7 @@ namespace Orders.Frontend.Components.Pages.Cities
         [Inject] private ISnackbar Snackbar { get; set; } = null!;
 
         [Parameter] public int Id { get; set; }
+        [Authorize(Roles = "Admin")]
 
         protected override async Task OnInitializedAsync()
         {
