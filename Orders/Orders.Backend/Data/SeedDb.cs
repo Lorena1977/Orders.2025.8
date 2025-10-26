@@ -1,15 +1,18 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Orders.Backend.UnitsOfWork.Interfaces;
 using Orders.Shared.Entities;
+using Orders.Shared.Enums;
 
 namespace Orders.Backend.Data
 {
     public class SeedDb
     {
         private readonly DataContext _context; //Campo de la clase para que permanezca siempre y no solo en el constructor.
-
-        public SeedDb(DataContext context) //Inyectamos la conexión a la base de datos mediante el constructor
+        private readonly IUsersUnitOfWork _usersUnitOfWork;
+        public SeedDb(DataContext context, IUsersUnitOfWork usersUnitOfWork) //Inyectamos la conexión a la base de datos mediante el constructor
         {
             _context = context;
+            _usersUnitOfWork = usersUnitOfWork;
         }
 
         //Siempre que arranque la aplicación, va a pasar por este método SeedAsync().
@@ -21,7 +24,9 @@ namespace Orders.Backend.Data
             await CheckCountriesFullAsync(); //Método para cagar los paises estados y ciudades del fichero sql de la carpeta Data
             await CheckCountriesAsync();//Método para que garantice que tenemos Countries. (Por si falla el de arriba)
             await CheckCategoriesAsync();//Método para que se garantice que tenemos entidades.
-          
+            await CheckRolesAsync();
+            await CheckUserAsync("1010", "Juan", "Zuluaga", "zulu@yopmail.com", "322 311 4620", "Calle Luna Calle Sol", UserType.Admin);
+
         }
 
         //Implementamos los métodos
@@ -134,6 +139,36 @@ namespace Orders.Backend.Data
                 var countriesSQLScript = File.ReadAllText("Data\\CountriesStatesCities.sql");
                 await _context.Database.ExecuteSqlRawAsync(countriesSQLScript);
             }
+        }
+        private async Task CheckRolesAsync()
+        {
+            await _usersUnitOfWork.CheckRoleAsync(UserType.Admin.ToString());
+            await _usersUnitOfWork.CheckRoleAsync(UserType.User.ToString());
+        }
+
+        private async Task<User> CheckUserAsync(string document, string firstName, string lastName, string email, string phone, string address, UserType userType)
+        {
+            var user = await _usersUnitOfWork.GetUserAsync(email);
+            if (user == null)
+            {
+                user = new User
+                {
+                    FirstName = firstName,
+                    LastName = lastName,
+                    Email = email,
+                    UserName = email,
+                    PhoneNumber = phone,
+                    Address = address,
+                    Document = document,
+                    City = _context.Cities.FirstOrDefault(),
+                    UserType = userType,
+                };
+
+                await _usersUnitOfWork.AddUserAsync(user, "123456");
+                await _usersUnitOfWork.AddUserToRoleAsync(user, userType.ToString());
+            }
+
+            return user;
         }
 
 

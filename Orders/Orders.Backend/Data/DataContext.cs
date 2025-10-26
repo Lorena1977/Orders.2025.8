@@ -1,11 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Orders.Shared.Entities;
 using System.Collections.Generic;
 using System.Reflection.Emit;
 
 namespace Orders.Backend.Data
 {
-    public class DataContext : DbContext //La clase DataContext hereda de la clase DbContext.
+    public class DataContext : IdentityDbContext<User>//DbContext //La clase DataContext hereda de la clase DbContext.
     {
         //Creamos el constructor de la clase tal como se indica.
         public DataContext(DbContextOptions<DataContext> options) : base(options)
