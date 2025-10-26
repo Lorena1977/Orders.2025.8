@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
+using Orders.Frontend.Components.Pages.Shared;
 using Orders.Frontend.Repositories;
+using Orders.Shared.Entities;
 using System.Net;
 
 namespace Orders.Frontend.Components.Pages.Countries
