@@ -52,6 +52,13 @@ namespace Orders.Backend.Repositories.Implementations
                 Result = (int)count
             };
         }
-    }
+        public async Task<IEnumerable<Category>> GetComboAsync()
+        {
+            return await _context.Categories
+                .OrderBy(c => c.Name)
+                .ToListAsync();
+        }
 
+
+    }
 }
