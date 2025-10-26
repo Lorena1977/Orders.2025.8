@@ -9,29 +9,32 @@ namespace Orders.Frontend.Repositories
 
         private JsonSerializerOptions _jsonDefaultOptions => new JsonSerializerOptions
         {
-            PropertyNameCaseInsensitive = true,
+            PropertyNameCaseInsensitive = true, //Cuando consuma un API, ignora mayusculas y minúsculas
         };
 
-        public Repository(HttpClient httpClient)
+        public Repository(HttpClient httpClient) //Me están inyectando un httpClient (que conecta backend con Fronted)
         {
             _httpClient = httpClient;
         }
 
+        //METODOS GET, POST, PUT, DELETE
+        //Método que devuelve las entidades que se rutean en el URL que le mando.
         public async Task<HttpResponseWrapper<T>> GetAsync<T>(string url)
         {
             HttpResponseMessage responseHttp = await _httpClient.GetAsync(url);
             if (responseHttp.IsSuccessStatusCode)
             {
-                var response = await UnserializeAnswerAsync<T>(responseHttp);
+                var response = await UnserializeAnswerAsync<T>(responseHttp);//Deserializa el JSON al objeto que nos mandan
                 return new HttpResponseWrapper<T>(response, false, responseHttp);
             }
 
             return new HttpResponseWrapper<T>(default, true, responseHttp);
         }
 
+        //
         public async Task<HttpResponseWrapper<object>> PostAsync<T>(string url, T model)
         {
-            var messageJSON = JsonSerializer.Serialize(model);
+            var messageJSON = JsonSerializer.Serialize(model);//Serializo el modelo y lo vuelvo un Json
             var messageContet = new StringContent(messageJSON, Encoding.UTF8, "application/json");
             var responseHttp = await _httpClient.PostAsync(url, messageContet);
             return new HttpResponseWrapper<object>(null, !responseHttp.IsSuccessStatusCode, responseHttp);
