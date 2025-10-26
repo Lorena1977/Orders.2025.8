@@ -12,15 +12,17 @@ namespace Orders.Backend.Data
         {
         }
 
-        //Creamos una propiedad DbSet (que es un genérico) e indico la entidad que quiero mapear
+        //Creamos una propiedad DbSet (que es un genérico) e indico la entidad/es que quiero mapear
+        public DbSet<Category> Categories { get; set; }
         public DbSet<Country> Countries { get; set; }
 
-        //Queremos que la tabla Country tenga un índice (en el campo Name) y que sea único para que no
+        //Queremos en las tablas que vayaos a crear tengan un índice (en el campo Name) y que sea único para que no
         //se dupliquen los paises. Para ello, creamos el método siguiente
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<Country>().HasIndex(c => c.Name).IsUnique();
+            modelBuilder.Entity<Category>().HasIndex(c => c.Name).IsUnique();//Indicamos que la tabla categoría tiene un índice único
+            modelBuilder.Entity<Country>().HasIndex(c => c.Name).IsUnique(); //Indicamos que la tabla Country tiene un índice único.
         }
     }
 

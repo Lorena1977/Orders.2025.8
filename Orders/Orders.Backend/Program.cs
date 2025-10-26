@@ -1,5 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using Orders.Backend.Data;
+using Orders.Backend.Repositories.Implementations;
+using Orders.Backend.Repositories.Interfaces;
+using Orders.Backend.UnitsOfWork.Implementations;
+using Orders.Backend.UnitsOfWork.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +15,9 @@ builder.Services.AddSwaggerGen();
 //6. Inyecto la conexión con el SqlServer
 builder.Services.AddDbContext<DataContext>(x => x.UseSqlServer("name=LocalConnection"));
 
+//22. Inyectamos los servicios 
+builder.Services.AddScoped(typeof(IGenericUnitOfWork<>), typeof(GenericUnitOfWork<>));
+builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
 
 var app = builder.Build();
