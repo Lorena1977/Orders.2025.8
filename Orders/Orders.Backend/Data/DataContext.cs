@@ -14,7 +14,10 @@ namespace Orders.Backend.Data
 
         //Creamos una propiedad DbSet (que es un genérico) e indico la entidad/es que quiero mapear
         public DbSet<Category> Categories { get; set; }
+        public DbSet<City> Cities { get; set; }
         public DbSet<Country> Countries { get; set; }
+        public DbSet<State> States { get; set; }
+
 
         //Queremos en las tablas que vayaos a crear tengan un índice (en el campo Name) y que sea único para que no
         //se dupliquen los paises. Para ello, creamos el método siguiente
@@ -22,8 +25,21 @@ namespace Orders.Backend.Data
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<Category>().HasIndex(c => c.Name).IsUnique();//Indicamos que la tabla categoría tiene un índice único
+            modelBuilder.Entity<City>().HasIndex(c => new { c.StateId, c.Name }).IsUnique();
             modelBuilder.Entity<Country>().HasIndex(c => c.Name).IsUnique(); //Indicamos que la tabla Country tiene un índice único.
+            modelBuilder.Entity<State>().HasIndex(s => new { s.CountryId, s.Name }).IsUnique();
+            DisableCascadingDelete(modelBuilder); 
         }
+        //Método que deshabilita el borrado en cascada.(Si se borra un estado que no lo borre para todos los paises)
+        private void DisableCascadingDelete(ModelBuilder modelBuilder)
+        {
+            var relationships = modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys());
+            foreach (var relationship in relationships)
+            {
+                relationship.DeleteBehavior = DeleteBehavior.Restrict;
+            }
+        }
+
     }
 
 }

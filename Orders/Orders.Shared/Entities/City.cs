@@ -8,14 +8,19 @@ using System.Threading.Tasks;
 
 namespace Orders.Shared.Entities
 {
-    public class Category : IEntityWithName //Implementa la interfaz IEntityWithName
+    public class City : IEntityWithName
     {
         public int Id { get; set; }
 
-        [Display(Name = "Categoría")]
+        [Display(Name = "Ciudad")]
         [MaxLength(100, ErrorMessage = "El campo {0} no puede tener más de {1} caracteres.")]
         [Required(ErrorMessage = "El campo {0} es obligatorio.")]
         public string Name { get; set; } = null!;
+
+        //Le indicamos que la entidad City está relacionada con la entidad Estados.
+        public int StateId { get; set; }
+
+        public State? State { get; set; }
     }
 
 }
