@@ -23,13 +23,13 @@ namespace Orders.Frontend.Components.Pages.Auth
         private void ShowModalResendConfirmationEmail()
         {
             var closeOnEscapeKey = new DialogOptions() { CloseOnEscapeKey = true, CloseButton = true, MaxWidth = MaxWidth.ExtraLarge };
-            //DialogService.Show<ResendConfirmationEmailToken>("Reenvio de correo", closeOnEscapeKey);
+            DialogService.ShowAsync<ResendConfirmationEmailToken>("Reenvio de correo", closeOnEscapeKey);
         }
 
         private void ShowModalRecoverPassword()
         {
             var closeOnEscapeKey = new DialogOptions() { CloseOnEscapeKey = true, CloseButton = true, MaxWidth = MaxWidth.ExtraLarge };
-            //DialogService.Show<RecoverPassword>("Rec. contraseña", closeOnEscapeKey);
+            //DialogService.ShowAsync<RecoverPassword>("Rec. contraseña", closeOnEscapeKey);
         }
 
         private void CloseModal()

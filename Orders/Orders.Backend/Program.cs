@@ -7,6 +7,7 @@ using Orders.Backend.Data;
 using Orders.Backend.Helpers;
 using Orders.Backend.Repositories.Implementations;
 using Orders.Backend.Repositories.Interfaces;
+using Orders.Backend.Services;
 using Orders.Backend.UnitsOfWork.Implementations;
 using Orders.Backend.UnitsOfWork.Interfaces;
 using Orders.Shared.Entities;
@@ -18,64 +19,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllers().AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-//6. Inyecto la conexión con el SqlServer
-builder.Services.AddDbContext<DataContext>(x => x.UseSqlServer("name=LocalConnection"));
 
-//22. Inyectamos los servicios 
-builder.Services.AddScoped(typeof(IGenericUnitOfWork<>), typeof(GenericUnitOfWork<>));
-builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
-
-//44. Agregamos las nuevas inyecciones de countries
-builder.Services.AddScoped<ICountriesRepository, CountriesRepository>();
-builder.Services.AddScoped<ICountriesUnitOfWork, CountriesUnitOfWork>();
-
-//52. Agregamos las nuevas inyecciones de estados
-builder.Services.AddScoped<IStatesRepository, StatesRepository>();
-builder.Services.AddScoped<IStatesUnitOfWork, StatesUnitOfWork>();
-
-//81. Agregamos las nuevas inyecciones de las ciudades
-builder.Services.AddScoped<ICitiesRepository, CitiesRepository>();
-builder.Services.AddScoped<ICitiesUnitOfWork, CitiesUnitOfWork>();
-
-//129. Agregamos las inyecciones de categorías
-builder.Services.AddScoped<ICategoriesRepository, CategoriesRepository>();
-builder.Services.AddScoped<ICategoriesUnitOfWork, CategoriesUnitOfWork>();
-
-//188. Agregamos la inyeccion de los usuarios
-builder.Services.AddScoped<IUsersRepository, UsersRepository>();
-builder.Services.AddScoped<IUsersUnitOfWork, UsersUnitOfWork>();
-
-//259. Agregamos la inyección
-builder.Services.AddScoped<IFileStorage, FileStorage>();
-
-//24. Inyectamos el SeedDb
-builder.Services.AddTransient<SeedDb>();
-
-
-builder.Services.AddIdentity<User, IdentityRole>(x =>
-{
-    x.User.RequireUniqueEmail = true;
-    x.Password.RequireDigit = false;
-    x.Password.RequiredUniqueChars = 0;
-    x.Password.RequireLowercase = false;
-    x.Password.RequireNonAlphanumeric = false;
-    x.Password.RequireUppercase = false;
-})
-    .AddEntityFrameworkStores<DataContext>()
-    .AddDefaultTokenProviders();
-
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(x => x.TokenValidationParameters = new TokenValidationParameters
-    {
-        ValidateIssuer = false,
-        ValidateAudience = false,
-        ValidateLifetime = true,
-        ValidateIssuerSigningKey = true,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["jwtKey"]!)),
-        ClockSkew = TimeSpan.Zero
-    });
-
+//228. Habilitamos Tokens en el Swagger. 
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "Orders Backend", Version = "v1" });
@@ -108,8 +53,81 @@ builder.Services.AddSwaggerGen(c =>
         });
 });
 
+//6. Inyecto la conexión con el SqlServer
+builder.Services.AddDbContext<DataContext>(x => x.UseSqlServer("name=LocalConnection"));
+
+//22. Inyectamos los servicios 
+builder.Services.AddScoped(typeof(IGenericUnitOfWork<>), typeof(GenericUnitOfWork<>));
+builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+
+//44. Agregamos las nuevas inyecciones de countries
+builder.Services.AddScoped<ICountriesRepository, CountriesRepository>();
+builder.Services.AddScoped<ICountriesUnitOfWork, CountriesUnitOfWork>();
+
+//52. Agregamos las nuevas inyecciones de estados
+builder.Services.AddScoped<IStatesRepository, StatesRepository>();
+builder.Services.AddScoped<IStatesUnitOfWork, StatesUnitOfWork>();
+
+//81. Agregamos las nuevas inyecciones de las ciudades
+builder.Services.AddScoped<ICitiesRepository, CitiesRepository>();
+builder.Services.AddScoped<ICitiesUnitOfWork, CitiesUnitOfWork>();
+
+//129. Agregamos las inyecciones de categorías
+builder.Services.AddScoped<ICategoriesRepository, CategoriesRepository>();
+builder.Services.AddScoped<ICategoriesUnitOfWork, CategoriesUnitOfWork>();
+
+//188. Agregamos la inyeccion de los usuarios
+builder.Services.AddScoped<IUsersRepository, UsersRepository>();
+builder.Services.AddScoped<IUsersUnitOfWork, UsersUnitOfWork>();
+
+//259. Agregamos la inyección que me permite guardar/borrar imagenes en el BlobStorage.
+builder.Services.AddScoped<IFileStorage, FileStorage>();
+
+//24. Inyectamos el SeedDb
+builder.Services.AddTransient<SeedDb>();
+builder.Services.AddScoped<IApiService, ApiService>();
+
+//300. Configuramos la inyección del servicio.
+builder.Services.AddScoped<IMailHelper, MailHelper>();
+
+//348 Agreamos la inyección de los productos.
+builder.Services.AddScoped<IProductsRepository, ProductsRepository>();
+builder.Services.AddScoped<IProductsUnitOfWork, ProductsUnitOfWork>();
+
+//188. Añadimos además cuales son las condiciones del Password que tiene que introducir usuario.
+builder.Services.AddIdentity<User, IdentityRole>(x =>
+{
+    x.Tokens.AuthenticatorTokenProvider = TokenOptions.DefaultAuthenticatorProvider;
+    x.SignIn.RequireConfirmedEmail = true;
+
+    x.User.RequireUniqueEmail = true;//El usuario requiere un único email
+    x.Password.RequireDigit = false; //No requiere digitos
+    x.Password.RequiredUniqueChars = 0; //0 caracteres especiales
+    x.Password.RequireLowercase = false; //No requiere minúsculas
+    x.Password.RequireNonAlphanumeric = false; 
+    x.Password.RequireUppercase = false; //No requiere mayusculas
+    
+    x.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+    x.Lockout.MaxFailedAccessAttempts = 3;
+    x.Lockout.AllowedForNewUsers = true;
+})
+    .AddEntityFrameworkStores<DataContext>()
+    .AddDefaultTokenProviders();
+
+//Agregamos al backend autentificación
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(x => x.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = false,
+        ValidateAudience = false,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["jwtKey"]!)),
+        ClockSkew = TimeSpan.Zero
+    });
 
 var app = builder.Build();
+
 
 //27. Cada vez que se ejecuta el programa, llamamos al SeedDB
 SeedData(app);
@@ -125,17 +143,30 @@ void SeedData(WebApplication app)
 }
 
 
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
+
+    // Esto permite que se muestren las excepciones completas en el navegador durante desarrollo
+    app.UseDeveloperExceptionPage();
+
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();
-
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+//habilita el consumo desde el Frontend
+app.UseCors(x => x
+    .AllowAnyMethod()//Cualquiera puede consumir esos metodos (post, put, get)
+    .AllowAnyHeader()
+    .SetIsOriginAllowed(origin => true)
+    .AllowCredentials());
+
 
 app.Run();

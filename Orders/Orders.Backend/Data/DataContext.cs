@@ -6,7 +6,7 @@ using System.Reflection.Emit;
 
 namespace Orders.Backend.Data
 {
-    public class DataContext : IdentityDbContext<User>//DbContext //La clase DataContext hereda de la clase DbContext.
+    public class DataContext : IdentityDbContext<User>//DbContext //La clase DataContext hereda de IdentityDbContext basandose en la definición de usuarios
     {
         //Creamos el constructor de la clase tal como se indica.
         public DataContext(DbContextOptions<DataContext> options) : base(options)
@@ -18,6 +18,10 @@ namespace Orders.Backend.Data
         public DbSet<City> Cities { get; set; }
         public DbSet<Country> Countries { get; set; }
         public DbSet<State> States { get; set; }
+        public DbSet<Product> Products { get; set; }
+        public DbSet<ProductCategory> ProductCategories { get; set; }
+        public DbSet<ProductImage> ProductImages { get; set; }
+
 
 
         //Queremos en las tablas que vayaos a crear tengan un índice (en el campo Name) y que sea único para que no
@@ -29,6 +33,7 @@ namespace Orders.Backend.Data
             modelBuilder.Entity<City>().HasIndex(c => new { c.StateId, c.Name }).IsUnique();
             modelBuilder.Entity<Country>().HasIndex(c => c.Name).IsUnique(); //Indicamos que la tabla Country tiene un índice único.
             modelBuilder.Entity<State>().HasIndex(s => new { s.CountryId, s.Name }).IsUnique();
+            modelBuilder.Entity<Product>().HasIndex(x => x.Name).IsUnique();
             DisableCascadingDelete(modelBuilder); 
         }
         //Método que deshabilita el borrado en cascada.(Si se borra un estado que no lo borre para todos los paises)

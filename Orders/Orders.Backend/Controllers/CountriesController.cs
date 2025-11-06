@@ -69,7 +69,8 @@ namespace Orders.Backend.Controllers
             return BadRequest();
         }
 
-        [AllowAnonymous]
+        //Llamamos al método que obtiene el listado con los Paises.
+        [AllowAnonymous] //Agrego esto porque no tengo Token (ya que no estoy registrado). Esta instrucción no me exite Token
         [HttpGet("combo")]
         public async Task<IActionResult> GetComboAsync()
         {

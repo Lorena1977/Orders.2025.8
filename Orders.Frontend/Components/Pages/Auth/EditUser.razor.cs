@@ -50,7 +50,7 @@ namespace Orders.Frontend.Components.Pages.Auth
         private void ShowModal()
         {
             var closeOnEscapeKey = new DialogOptions() { CloseOnEscapeKey = true };
-            DialogService.Show<ChangePassword>("Cambiar Contraseña", closeOnEscapeKey);
+            DialogService.ShowAsync<ChangePassword>("Cambiar Contraseña", closeOnEscapeKey);
         }
 
         private async Task LoadUserAsyc()

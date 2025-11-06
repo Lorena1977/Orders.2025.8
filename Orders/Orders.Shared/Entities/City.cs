@@ -21,7 +21,7 @@ namespace Orders.Shared.Entities
         public int StateId { get; set; }
 
         public State? State { get; set; }
-        public ICollection<User>? Users { get; set; }
+        public ICollection<User>? Users { get; set; } //Indicamos que una Ciudad tiene una colección de usuarios.
     }
 
 }

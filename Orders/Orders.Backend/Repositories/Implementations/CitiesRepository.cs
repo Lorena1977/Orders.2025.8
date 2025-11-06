@@ -58,6 +58,8 @@ namespace Orders.Backend.Repositories.Implementations
                 Result = (int)count
             };
         }
+
+        //Método que devuelve la lista de ciudades que tiene un estado concreto.
         public async Task<IEnumerable<City>> GetComboAsync(int stateId)
         {
             return await _context.Cities

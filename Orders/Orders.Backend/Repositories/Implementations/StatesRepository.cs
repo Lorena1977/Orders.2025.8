@@ -94,6 +94,7 @@ namespace Orders.Backend.Repositories.Implementations
             };
         }
 
+        //Método que devuelve la lista de estados que tiene un pais concreto.
         public async Task<IEnumerable<State>> GetComboAsync(int countryId)
         {
             return await _context.States

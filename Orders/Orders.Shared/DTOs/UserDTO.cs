@@ -8,8 +8,9 @@ using System.Threading.Tasks;
 
 namespace Orders.Shared.DTOs
 {
-    public class UserDTO : User
+    public class UserDTO : User //Hereda de la clase User (tiene todo lo de la clase user)
     {
+        //Le agregamos los campos adicionales que queremos que tenga el Usuario.
         [DataType(DataType.Password)]
         [Display(Name = "Contraseña")]
         [Required(ErrorMessage = "El campo {0} es obligatorio.")]

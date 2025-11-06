@@ -93,6 +93,27 @@ namespace Orders.Backend.Controllers
         }
 
 
+        //[HttpGet]
+        //public virtual async Task<IActionResult> GetAsync([FromQuery] PaginationDTO pagination)
+        //{
+        //    var action = await _unitOfWork.GetAsync(pagination);
+        //    if (action.WasSuccess)
+        //    {
+        //        return Ok(action.Result);
+        //    }
+        //    return BadRequest();
+        //}
+
+        [HttpGet("totalPages")]
+        public virtual async Task<IActionResult> GetPagesAsync([FromQuery] PaginationDTO pagination)
+        {
+            var action = await _unitOfWork.GetTotalRecordsAsync(pagination);
+            if (action.WasSuccess)
+            {
+                return Ok(action.Result);
+            }
+            return BadRequest();
+        }
 
 
 

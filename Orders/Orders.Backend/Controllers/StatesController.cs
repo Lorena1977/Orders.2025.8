@@ -64,7 +64,9 @@ namespace Orders.Backend.Controllers
             }
             return BadRequest();
         }
-        [AllowAnonymous]
+
+        //Llamamos al método que obtiene el listado de los estados asociados a un pais concreto.
+        [AllowAnonymous]//Para que no me exija tener un Token (Puesto que no estoy autenticado)
         [HttpGet("combo/{countryId:int}")]
         public async Task<IActionResult> GetComboAsync(int countryId)
         {

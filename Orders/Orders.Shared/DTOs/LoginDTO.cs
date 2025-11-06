@@ -9,6 +9,7 @@ namespace Orders.Shared.DTOs
 {
     public class LoginDTO
     {
+        //Lo que se pide a la hora de logguearse.(Email y Contraseña)
         [Required(ErrorMessage = "El campo {0} es obligatorio.")]
         [EmailAddress(ErrorMessage = "Debes ingresar un correo válido.")]
         public string Email { get; set; } = null!;

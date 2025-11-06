@@ -8,7 +8,7 @@ namespace Orders.Backend.Repositories.Interfaces
     {
         Task<ActionResponse<IEnumerable<City>>> GetAsync(PaginationDTO pagination);
         Task<ActionResponse<int>> GetTotalRecordsAsync(PaginationDTO pagination);
-        Task<IEnumerable<City>> GetComboAsync(int stateId);
+        Task<IEnumerable<City>> GetComboAsync(int stateId);//Devuelve la lista de ciudades asociadas a un estado.
     }
 
 }

@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace Orders.Shared.Entities
 {
-    public class User : IdentityUser
+    public class User : IdentityUser //Heredad de IdentityUser.
     {
-        [Display(Name = "Documento")]
+        [Display(Name = "Documento")] 
         [MaxLength(20, ErrorMessage = "El campo {0} debe tener máximo {1} caractéres.")]
         [Required(ErrorMessage = "El campo {0} es obligatorio.")]
         public string Document { get; set; } = null!;
@@ -34,10 +34,10 @@ namespace Orders.Shared.Entities
         [Display(Name = "Foto")]
         public string? Photo { get; set; }
 
-        [Display(Name = "Tipo de usuario")]
+        [Display(Name = "Tipo de usuario")]//0=administradores, 1=usuarios
         public UserType UserType { get; set; }
 
-        public City? City { get; set; }
+        public City? City { get; set; } //Ciudad a la que pertenece.
 
         [Display(Name = "Ciudad")]
         [Range(1, int.MaxValue, ErrorMessage = "Debes seleccionar una {0}.")]

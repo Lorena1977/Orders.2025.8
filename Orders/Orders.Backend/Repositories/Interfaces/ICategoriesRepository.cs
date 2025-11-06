@@ -9,7 +9,7 @@ namespace Orders.Backend.Repositories.Interfaces
         Task<ActionResponse<IEnumerable<Category>>> GetAsync(PaginationDTO pagination);
 
         Task<ActionResponse<int>> GetTotalRecordsAsync(PaginationDTO pagination);
-        Task<IEnumerable<Category>> GetComboAsync();
+        Task<IEnumerable<Category>> GetComboAsync(); //Muestra la lista de categorías ordenadas por nombre.
     }
 
 }

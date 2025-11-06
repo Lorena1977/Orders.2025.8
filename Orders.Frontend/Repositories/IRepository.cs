@@ -15,5 +15,6 @@
 
         Task<HttpResponseWrapper<TActionResponse>> PutAsync<T, TActionResponse>(string url, T model);//Método sobrecargado del Put.
         //Lo usaré cuando lo que yo mando no es igual que lo que yo recibo
+        Task<HttpResponseWrapper<object>> GetAsync(string url);
     }
 }

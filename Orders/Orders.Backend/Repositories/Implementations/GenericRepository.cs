@@ -149,7 +149,6 @@ namespace Orders.Backend.Repositories.Implementations
                     .ToListAsync()
             };
         }
-
         public virtual async Task<ActionResponse<int>> GetTotalRecordsAsync(PaginationDTO pagination)
         {
             var queryable = _entity.AsQueryable();

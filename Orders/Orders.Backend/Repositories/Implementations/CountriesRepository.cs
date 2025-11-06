@@ -93,6 +93,9 @@ namespace Orders.Backend.Repositories.Implementations
                 Result = (int)count
             };
         }
+
+
+        //Método que devuelve la lsita de los paises ordenada por nombres.
         public async Task<IEnumerable<Country>> GetComboAsync()
         {
             return await _context.Countries

@@ -11,7 +11,7 @@ namespace Orders.Backend.Repositories.Interfaces
         Task<ActionResponse<IEnumerable<State>>> GetAsync();
         Task<ActionResponse<IEnumerable<State>>> GetAsync(PaginationDTO pagination);
         Task<ActionResponse<int>> GetTotalRecordsAsync(PaginationDTO pagination);
-        Task<IEnumerable<State>> GetComboAsync(int countryId);
+        Task<IEnumerable<State>> GetComboAsync(int countryId);//Devuelve una lista de Estados de un Pais.
 
     }
 

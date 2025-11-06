@@ -52,6 +52,8 @@ namespace Orders.Backend.Repositories.Implementations
                 Result = (int)count
             };
         }
+
+        //Método que devuelve la lista de categorías.
         public async Task<IEnumerable<Category>> GetComboAsync()
         {
             return await _context.Categories

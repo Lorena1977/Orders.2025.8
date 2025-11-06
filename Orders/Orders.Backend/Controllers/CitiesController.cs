@@ -32,6 +32,8 @@ namespace Orders.Backend.Controllers
             }
             return BadRequest();
         }
+        
+        //Método que obtiene el número total de registros.
 
         [HttpGet("totalRecords")]
         public override async Task<IActionResult> GetTotalRecordsAsync([FromQuery] PaginationDTO pagination)
@@ -43,7 +45,10 @@ namespace Orders.Backend.Controllers
             }
             return BadRequest();
         }
-        [AllowAnonymous]
+
+
+        //Llamamos al método que obtiene el listado de las ciudades asociados a un estado concreto.
+        [AllowAnonymous] //No me exite Token (Puesto que no estoy autenticado)
         [HttpGet("combo/{stateId:int}")]
         public async Task<IActionResult> GetComboAsync(int stateId)
         {
