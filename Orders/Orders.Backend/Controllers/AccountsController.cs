@@ -241,6 +241,7 @@ namespace Orders.Backend.Controllers
         }
 
 
+        //Método que permite reenviar el correo.
         [HttpPost("ResedToken")]
         public async Task<IActionResult> ResedTokenAsync([FromBody] EmailDTO model)
         {
@@ -249,13 +250,11 @@ namespace Orders.Backend.Controllers
             {
                 return NotFound();
             }
-
-            var response = await SendConfirmationEmailAsync(user);
+            var response = await SendConfirmationEmailAsync(user); //Genera el token y manda el correo.
             if (response.WasSuccess)
             {
                 return NoContent();
             }
-
             return BadRequest(response.Message);
         }
 
