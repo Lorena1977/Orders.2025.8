@@ -31,10 +31,10 @@ namespace Orders.Frontend.Components.Pages.Auth
 
         protected override async Task OnInitializedAsync()
         {
-            await LoadUserAsyc();
-            await LoadCountriesAsync();
-            await LoadStatesAsyn(user!.City!.State!.Country!.Id);
-            await LoadCitiesAsyn(user!.City!.State!.Id);
+            await LoadUserAsyc(); //Cargamos el usuario
+            await LoadCountriesAsync(); //Cargamos los paises
+            await LoadStatesAsyn(user!.City!.State!.Country!.Id); //Cargamos los estados del pais
+            await LoadCitiesAsyn(user!.City!.State!.Id);//Cargamos las ciudades d eun estado.
 
             selectedCountry = user!.City!.State!.Country!;
             selectedState = user.City.State;

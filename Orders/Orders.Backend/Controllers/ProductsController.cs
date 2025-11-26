@@ -21,6 +21,22 @@ namespace Orders.Backend.Controllers
             _productsUnitOfWork = productsUnitOfWork;
         }
 
+
+
+        [AllowAnonymous]
+        [HttpGet("paged")]
+        //[HttpGet]
+        public override async Task<IActionResult> GetAsync([FromQuery] PaginationDTO pagination)
+        {
+            var response = await _productsUnitOfWork.GetAsync(pagination);
+            if (response.WasSuccess)
+            {
+                return Ok(response.Result);
+            }
+            return BadRequest();
+        }
+
+
         [AllowAnonymous]
         [HttpGet("{id}")]
         public override async Task<IActionResult> GetAsync(int id)
@@ -68,17 +84,39 @@ namespace Orders.Backend.Controllers
         }
 
 
-        //[AllowAnonymous]
-        //[HttpGet]
-        //public override async Task<IActionResult> GetAsync([FromQuery] PaginationDTO pagination)
-        //{
-        //    var response = await _productsUnitOfWork.GetAsync(pagination);
-        //    if (response.WasSuccess)
-        //    {
-        //        return Ok(response.Result);
-        //    }
-        //    return BadRequest();
-        //}
+        [HttpPost("addImages")]
+        public async Task<IActionResult> PostAddImagesAsync(ImageDTO imageDTO)
+        {
+            var action = await _productsUnitOfWork.AddImageAsync(imageDTO);
+            if (action.WasSuccess)
+            {
+                return Ok(action.Result);
+            }
+            return BadRequest(action.Message);
+        }
+
+        [HttpPost("removeLastImage")]
+        public async Task<IActionResult> PostRemoveLastImageAsync(ImageDTO imageDTO)
+        {
+            var action = await _productsUnitOfWork.RemoveLastImageAsync(imageDTO);
+            if (action.WasSuccess)
+            {
+                return Ok(action.Result);
+            }
+            return BadRequest(action.Message);
+        }
+
+
+        [HttpDelete("{id}")]       
+        public override async Task<IActionResult> DeleteAsync(int id)
+        {
+            var action = await _productsUnitOfWork.DeleteAsync(id);
+            if (!action.WasSuccess)
+            {
+                return NotFound();
+            }
+            return NoContent();
+        }
 
     }
 }

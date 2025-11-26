@@ -9,10 +9,9 @@ namespace Orders.Shared.Entities
     public class ProductCategory
     {
         public int Id { get; set; }
-
         public Product? Product { get; set; }
         public int ProductId { get; set; }
-        public Category? Category { get; set; }
+        public Category? Category { get; set; } //Categoría a la que pertenece.
         public int CategoryId { get; set; }
     }
 

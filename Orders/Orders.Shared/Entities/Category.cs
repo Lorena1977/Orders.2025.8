@@ -17,10 +17,10 @@ namespace Orders.Shared.Entities
         [Required(ErrorMessage = "El campo {0} es obligatorio.")]
         public string Name { get; set; } = null!;
 
-        public ICollection<ProductCategory>? ProductCategories { get; set; }
+        public ICollection<ProductCategory>? ProductCategories { get; set; } //Una categoría tiene una colección de productos.
 
         [Display(Name = "Productos")]
-        public int ProductCategoriesNumber => ProductCategories == null || ProductCategories.Count == 0 ? 0 : ProductCategories.Count;
+        public int ProductCategoriesNumber => ProductCategories == null || ProductCategories.Count == 0 ? 0 : ProductCategories.Count; //Cuenta cuantos productos tenemos en una categoría
 
     }
 

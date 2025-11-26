@@ -8,7 +8,7 @@ using Orders.Shared.Responses;
 
 namespace Orders.Backend.Repositories.Implementations
 {
-    public class ProductsRepository : GenericRepository<Product>, IProductsRepository
+    public class ProductsRepository : GenericRepository<Product>, IProductsRepository //Hereda del repositorio generico de productos.
     {
         private readonly DataContext _context;
         private readonly IFileStorage _fileStorage;
@@ -19,6 +19,10 @@ namespace Orders.Backend.Repositories.Implementations
             _fileStorage = fileStorage;
         }
 
+
+
+
+        //Metodo que recupera las imágenes y las categorias. Añado la posibilidad de filtro.
         public override async Task<ActionResponse<IEnumerable<Product>>> GetAsync(PaginationDTO pagination)
         {
             var queryable = _context.Products
@@ -41,6 +45,7 @@ namespace Orders.Backend.Repositories.Implementations
             };
         }
 
+        //Metodo que devuelve el total de páginas.
         public override async Task<ActionResponse<int>> GetTotalRecordsAsync(PaginationDTO pagination)
         {
             var queryable = _context.Products.AsQueryable();
@@ -59,6 +64,7 @@ namespace Orders.Backend.Repositories.Implementations
             };
         }
 
+        //Metodo que devuelve la descripción de la categoría.
         public override async Task<ActionResponse<Product>> GetAsync(int id)
         {
             var product = await _context.Products
@@ -83,6 +89,7 @@ namespace Orders.Backend.Repositories.Implementations
             };
         }
 
+        //Método que da de alta un producto.
         public async Task<ActionResponse<Product>> AddFullAsync(ProductDTO productDTO)
         {
             try
@@ -138,6 +145,7 @@ namespace Orders.Backend.Repositories.Implementations
             }
         }
 
+        //Método que actualiza los campos del producto
         public async Task<ActionResponse<Product>> UpdateFullAsync(ProductDTO productDTO)
         {
             try
@@ -197,6 +205,126 @@ namespace Orders.Backend.Repositories.Implementations
                 };
             }
         }
+
+        public async Task<ActionResponse<ImageDTO>> AddImageAsync(ImageDTO imageDTO)
+        {
+            var product = await _context.Products
+                .Include(x => x.ProductImages)
+                .FirstOrDefaultAsync(x => x.Id == imageDTO.ProductId);
+            if (product == null)
+            {
+                return new ActionResponse<ImageDTO>
+                {
+                    WasSuccess = false,
+                    Message = "Producto no existe"
+                };
+            }
+
+            for (int i = 0; i < imageDTO.Images.Count; i++)
+            {
+                if (!imageDTO.Images[i].StartsWith("https://"))
+                {
+                    var photoProduct = Convert.FromBase64String(imageDTO.Images[i]);
+                    imageDTO.Images[i] = await _fileStorage.SaveFileAsync(photoProduct, ".jpg", "products");
+                    product.ProductImages!.Add(new ProductImage { Image = imageDTO.Images[i] });
+                }
+            }
+
+            _context.Update(product);
+            await _context.SaveChangesAsync();
+            return new ActionResponse<ImageDTO>
+            {
+                WasSuccess = true,
+                Result = imageDTO
+            };
+        }
+
+
+        public async Task<ActionResponse<ImageDTO>> RemoveLastImageAsync(ImageDTO imageDTO)
+        {
+            var product = await _context.Products
+                .Include(x => x.ProductImages)
+                .FirstOrDefaultAsync(x => x.Id == imageDTO.ProductId);
+            if (product == null)
+            {
+                return new ActionResponse<ImageDTO>
+                {
+                    WasSuccess = false,
+                    Message = "Producto no existe"
+                };
+            }
+
+            if (product.ProductImages is null || product.ProductImages.Count == 0)
+            {
+                return new ActionResponse<ImageDTO>
+                {
+                    WasSuccess = true,
+                    Result = imageDTO
+                };
+            }
+
+            var lastImage = product.ProductImages.LastOrDefault();
+            await _fileStorage.RemoveFileAsync(lastImage!.Image, "products");
+            _context.ProductImages.Remove(lastImage);
+
+            await _context.SaveChangesAsync();
+            imageDTO.Images = product.ProductImages.Select(x => x.Image).ToList();
+            return new ActionResponse<ImageDTO>
+            {
+                WasSuccess = true,
+                Result = imageDTO
+            };
+        }
+
+
+        //Método que borra de la base de datos un producto.
+        public override async Task<ActionResponse<Product>> DeleteAsync(int id)
+        {
+            var product = await _context.Products
+                .Include(x => x.ProductCategories)
+                .Include(x => x.ProductImages)
+                .FirstOrDefaultAsync(x => x.Id == id);
+            if (product == null)
+            {
+                return new ActionResponse<Product>
+                {
+                    WasSuccess = false,
+                    Message = "Producto no encontrado"
+                };
+            }
+
+            foreach (var productImage in product.ProductImages!)
+            {
+                await _fileStorage.RemoveFileAsync(productImage.Image, "products");
+            }
+
+            try
+            {
+                _context.ProductCategories.RemoveRange(product.ProductCategories!);
+                _context.ProductImages.RemoveRange(product.ProductImages!);
+                _context.Products.Remove(product);
+                await _context.SaveChangesAsync();
+                return new ActionResponse<Product>
+                {
+                    WasSuccess = true,
+                };
+            }
+            catch
+            {
+                return new ActionResponse<Product>
+                {
+                    WasSuccess = false,
+                    Message = "No se puede borrar el producto, porque tiene registros relacionados"
+                };
+            }
+        }
+
+
+
+
+
+
+
     }
 
 }

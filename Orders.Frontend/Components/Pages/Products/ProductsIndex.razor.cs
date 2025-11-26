@@ -1,6 +1,8 @@
 using CurrieTechnologies.Razor.SweetAlert2;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
+using MudBlazor;
+using Orders.Frontend.Components.Pages.Countries;
 using Orders.Frontend.Repositories;
 using Orders.Shared.Entities;
 
@@ -11,17 +13,28 @@ namespace Orders.Frontend.Components.Pages.Products
     {
         private int currentPage = 1;
         private int totalPages;
+        public List<Product>? Products { get; set; }
+
+        private bool loading; //Cosecha propia
+        private MudTable<Product> table = new();//Cosecha propia
+        private readonly int[] pageSizeOptions = { 10, 25, 50, int.MaxValue };//Cosecha propia
+        private const string baseUrl = "api/products";//Cosecha propia
+        private string infoFormat = "{first_item}-{last_item} => {all_items}";//Cosecha propia
+        [Inject] private IDialogService DialogService { get; set; } = null!; //Cosecha propia
+        [Inject] private ISnackbar Snackbar { get; set; } = null!; //Cosecha propia
+
 
         [Inject] private NavigationManager NavigationManager { get; set; } = null!;
         [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;
         [Inject] private IRepository Repository { get; set; } = null!;
 
-        public List<Product>? Products { get; set; }
+
+
 
         [Parameter, SupplyParameterFromQuery] public string Page { get; set; } = string.Empty;
         [Parameter, SupplyParameterFromQuery] public string Filter { get; set; } = string.Empty;
         [Parameter, SupplyParameterFromQuery] public int RecordsNumber { get; set; } = 10;
-
+        
         protected override async Task OnInitializedAsync()
         {
             await LoadAsync();
@@ -70,6 +83,7 @@ namespace Orders.Frontend.Components.Pages.Products
             }
         }
 
+        //Carga la lista de productos del API que acabamos de crear.
         private async Task<bool> LoadListAsync(int page)
         {
             ValidateRecordsNumber(RecordsNumber);
@@ -83,13 +97,14 @@ namespace Orders.Frontend.Components.Pages.Products
             if (response.Error)
             {
                 var message = await response.GetErrorMessageAsync();
-                await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
-                return false;
+                await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);              
+                   return false;
+                }
+                Products = response.Response;
+                return true;
             }
-            Products = response.Response;
-            return true;
-        }
 
+        //Carga la la variable de totalPages.
         private async Task LoadPagesAsync()
         {
             ValidateRecordsNumber(RecordsNumber);
@@ -109,6 +124,7 @@ namespace Orders.Frontend.Components.Pages.Products
             totalPages = response.Response;
         }
 
+        //Método para borrar el producto.
         private async Task Delete(int productId)
         {
             var result = await SweetAlertService.FireAsync(new SweetAlertOptions
@@ -143,12 +159,22 @@ namespace Orders.Frontend.Components.Pages.Products
             await LoadAsync(1);
         }
 
+        //Método para aplicar el filtro.
         private async Task ApplyFilterAsync()
         {
             int page = 1;
             await LoadAsync(page);
             await SelectedPageAsync(page);
         }
-    }
 
+        //------------------------------------------------------------------- INICIO
+       
+        
+        //------------------------------------------------------------------- FIN
+
+
+
+
+
+    }
 }

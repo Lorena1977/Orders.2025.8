@@ -6,10 +6,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <base href="/" />
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
+    
+    @* Usando la referencia @Assets (común en Blazor Web App) *@
     <link href=@Assets["_content/MudBlazor/MudBlazor.min.css"] rel="stylesheet" />
     <ImportMap />
+
+    @* Mantenemos InteractiveServer, pero si usas WASM, cámbialo a InteractiveWebAssembly *@
     <link rel="icon" type="image/ico" href="favicon.ico" />
     <HeadOutlet @rendermode="InteractiveServer" />
+
+    <link href="css/app.css" rel="stylesheet" />
+  
 </head>
 
 <body>
@@ -17,8 +24,8 @@
     <script src="_framework/blazor.web.js"></script>
     <script src=@Assets["_content/MudBlazor/MudBlazor.min.js"]></script>
     <script src="_content/CurrieTechnologies.Razor.SweetAlert2/sweetAlert2.js"></script>
-    <script src="_framework/blazor.webassembly.js"></script>
-</body>
+@*     <script src="_framework/blazor.webassembly.js"></script>
+ *@</body>
 
 </html>
 

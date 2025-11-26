@@ -1,4 +1,5 @@
 using CurrieTechnologies.Razor.SweetAlert2;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Components.Routing;
@@ -8,13 +9,14 @@ using Orders.Shared.Entities;
 
 namespace Orders.Frontend.Components.Pages.Products
 {
+    [Authorize(Roles = "Admin")]
     public partial class ProductForm
     {
         private EditContext editContext = null!;
         private string? imageUrl;
 
-        private List<MultipleSelectorModel> selected { get; set; } = new();
-        private List<MultipleSelectorModel> nonSelected { get; set; } = new();
+        private List<MultipleSelectorModel> Selected { get; set; } = new();
+        private List<MultipleSelectorModel> NonSelected { get; set; } = new();
 
         [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;
         [Parameter, EditorRequired] public ProductDTO ProductDTO { get; set; } = null!;
@@ -28,12 +30,13 @@ namespace Orders.Frontend.Components.Pages.Products
 
         public bool FormPostedSuccessfully { get; set; } = false;
 
+
         protected override void OnInitialized()
         {
             editContext = new(ProductDTO);
 
-            selected = SelectedCategories.Select(x => new MultipleSelectorModel(x.Id.ToString(), x.Name)).ToList();
-            nonSelected = NonSelectedCategories.Select(x => new MultipleSelectorModel(x.Id.ToString(), x.Name)).ToList();
+            Selected = SelectedCategories.Select(x => new MultipleSelectorModel(x.Id.ToString(), x.Name)).ToList();
+            NonSelected = NonSelectedCategories.Select(x => new MultipleSelectorModel(x.Id.ToString(), x.Name)).ToList();
         }
 
         private void ImageSelected(string imagenBase64)
@@ -49,7 +52,7 @@ namespace Orders.Frontend.Components.Pages.Products
 
         private async Task OnDataAnnotationsValidatedAsync()
         {
-            ProductDTO.ProductCategoryIds = selected.Select(x => int.Parse(x.Key)).ToList();
+            ProductDTO.ProductCategoryIds = Selected.Select(x => int.Parse(x.Key)).ToList();
             await OnValidSubmit.InvokeAsync();
         }
 

@@ -1,4 +1,5 @@
-﻿<NavigationLock OnBeforeInternalNavigation="OnBeforeInternalNavigation"></NavigationLock>
+﻿
+<NavigationLock OnBeforeInternalNavigation="OnBeforeInternalNavigation"></NavigationLock>
 
 <EditForm EditContext="editContext" OnValidSubmit="OnDataAnnotationsValidatedAsync">
     <DataAnnotationsValidator />
@@ -47,7 +48,7 @@
                     <div class="mb-3">
                         <label>Categorías:</label>
                         <div>
-                            <MultipleSelector NonSelected="nonSelected" Selected="selected" />
+                            <MultipleSelector NonSelected="NonSelected" Selected="Selected" />
                         </div>
                     </div>
                     <div class="mb-3">
@@ -66,10 +67,14 @@
     </div>
 </EditForm>
 
-@*@if (IsEdit && ProductDTO.ProductImages is not null)
+@if (IsEdit && ProductDTO.ProductImages is not null)
 {
     <CarouselView Images="ProductDTO.ProductImages" />
-}*@
+}
+
+
+
+
 
 
 

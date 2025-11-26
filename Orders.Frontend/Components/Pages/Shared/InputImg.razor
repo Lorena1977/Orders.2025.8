@@ -10,15 +10,17 @@
     {
         <div>
             <div style="margin: 10px">
-                <img src="data:image/jpeg;base64, @imageBase64" style="height:200px; max-width:200px" />
+               
+                 <img src="data:image/jpeg;base64, @imageBase64" style="height:200px; max-width:200px" />
             </div>
         </div>
     }
-
+  
     @if (ImageURL is not null)
-    {
+     {
         <div>
             <div style="margin: 10px">
+                <p>ImageURL = @ImageURL</p>
                 <img src="@ImageURL" style="height:200px; max-width:200px" />
             </div>
         </div>

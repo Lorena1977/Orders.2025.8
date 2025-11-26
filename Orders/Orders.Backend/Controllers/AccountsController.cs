@@ -138,7 +138,7 @@ namespace Orders.Backend.Controllers
             };
         }
 
-
+        //Métodos para poder actualizar el usuario.
         [HttpPut]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)] //El put requiere Token para que 
         //yo solo pueda modificar mis datos.
@@ -157,6 +157,8 @@ namespace Orders.Backend.Controllers
                     var photoUser = Convert.FromBase64String(user.Photo);
                     user.Photo = await _fileStorage.SaveFileAsync(photoUser, ".jpg", _container);
                 }
+
+                //Actualizamos los datos que se pueden actualizar.
                 currentUser.Document = user.Document;
                 currentUser.FirstName = user.FirstName;
                 currentUser.LastName = user.LastName;
@@ -168,8 +170,7 @@ namespace Orders.Backend.Controllers
                 var result = await _usersUnitOfWork.UpdateUserAsync(currentUser);
                 if (result.Succeeded)
                 {
-                    return Ok(BuildToken(currentUser));
-                   
+                    return Ok(BuildToken(currentUser));                  
                 }
 
                 return BadRequest(result.Errors.FirstOrDefault());

@@ -16,7 +16,7 @@ namespace Orders.Shared.Entities
         public int ProductId { get; set; }
 
         [Display(Name = "Imagen")]
-        public string Image { get; set; } = null!;
+        public string Image { get; set; } = null!; //Ruta como queda almacenada la imgane en BlobStorage.
     }
 
 }

@@ -1,4 +1,4 @@
-html, body {
+﻿html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
@@ -17,7 +17,7 @@ a, .btn-link {
 }
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
 .content {
@@ -131,11 +131,9 @@ code {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding: 5px
+    padding: 5px;   
 }
 
-    .multiple-selector-botones button {
+.multiple-selector-botones button {
         margin: 5px;
-    }
-
-
+}

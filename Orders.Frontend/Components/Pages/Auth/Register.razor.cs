@@ -11,11 +11,11 @@ namespace Orders.Frontend.Components.Pages.Auth
 {
     public partial class Register
     {
-        private UserDTO userDTO = new();
-        private List<Country>? countries;
-        private List<State>? states;
-        private List<City>? cities;
-        private bool loading;
+        private UserDTO userDTO = new(); //Todos los campos de usuario + contraseña + confirmación de contraseña
+        private List<Country>? countries; //Lista de paises
+        private List<State>? states; //Lista de estados
+        private List<City>? cities; //Lista de ciudades.
+        private bool loading; 
         private string? imageUrl;//Atributo que es la imagen del usuario cuando se registra.
         private string? titleLabel;
 
@@ -25,7 +25,7 @@ namespace Orders.Frontend.Components.Pages.Auth
 
         [Inject] private NavigationManager NavigationManager { get; set; } = null!;
         [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;
-        [Inject] private ILoginService LoginService { get; set; } = null!;
+        [Inject] private ILoginService LoginService { get; set; } = null!; //Si me registro automáticamente lo loggeo. Eso lo vamos a quitar.
         [Inject] private IDialogService DialogService { get; set; } = null!;
         [Inject] private ISnackbar Snackbar { get; set; } = null!;
         [Inject] private IRepository Repository { get; set; } = null!;
@@ -33,7 +33,7 @@ namespace Orders.Frontend.Components.Pages.Auth
 
         protected override async Task OnInitializedAsync()
         {
-            await LoadCountriesAsync();
+            await LoadCountriesAsync(); //Carga los Paises (Va al API y carga el combo)
         }
 
         protected override void OnParametersSet()
@@ -88,7 +88,7 @@ namespace Orders.Frontend.Components.Pages.Auth
             cities = responseHttp.Response;
         }
 
-        //Método que permite modificar el Pais
+        //Método que me limpia la ciudad y el estado cuando cambio el pais.
         private async Task CountryChangedAsync(Country country)
         {
             selectedCountry = country;
@@ -99,7 +99,7 @@ namespace Orders.Frontend.Components.Pages.Auth
             await LoadStatesAsyn(country.Id);
         }
 
-        //Método que permite cambiar el estado
+        //Método que limpia la ciudad cuando cambio de estado.
         private async Task StateChangedAsync(State state)
         {
             selectedState = state;
@@ -115,6 +115,7 @@ namespace Orders.Frontend.Components.Pages.Auth
             userDTO.CityId = city.Id;
         }
 
+        //Método que no me muestra todos los paises sino que muestra unos pocos y luego pueda buscar.
         private async Task<IEnumerable<Country>> SearchCountries(string searchText, CancellationToken token)
         {
             await Task.Delay(5);
@@ -154,17 +155,19 @@ namespace Orders.Frontend.Components.Pages.Auth
                 .ToList();
         }
 
+        //Si el usuario no se registró se sale.
         private void ReturnAction()
         {
             NavigationManager.NavigateTo("/");
         }
 
+        //Metodo que comprueba que se hayan seleccionado todos los campos.
         private void InvalidForm()
         {
             Snackbar.Add("Por favor llena todos los campos del formulario.", Severity.Warning);
         }
 
-        //Método que permite crear un usuario.
+        //Método que permite crear un usuario. Devuelve un Token .
         private async Task CreateUserAsync()
         {
             loading = true;

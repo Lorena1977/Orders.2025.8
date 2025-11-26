@@ -1,69 +1,82 @@
 ﻿@page "/products"
 
-<div class="card">
-    <div class="card-header">
-        <span>
-            <i class="bi bi-box2" /> Productos
-            <a class="btn btn-sm btn-primary float-end" href="/products/create"><i class="bi bi-plus-square" /> Nuevo Producto</a>
-        </span>
-    </div>
-    <div class="card-body">
-        <Filter PlaceHolder="Buscar producto..." Callback=@FilterCallBack />
-        <GenericList MyList="Products">
-            <Body>
-                <Pagination CurrentPage="currentPage"
-                            TotalPages="totalPages"
-                            SelectedPage="SelectedPageAsync"
-                            RecordsNumber="SelectedRecordsNumberAsync" />
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>Nombre</th>
-                            <th>Descripción</th>
-                            <th>Precio</th>
-                            <th>Inventario</th>
-                            <th>Categorías</th>
-                            <th>Imagenes</th>
-                            <th>Imagen Principal</th>
-                            <th style="width:168px"></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var product in Products!)
-                        {
-                            <tr>
-                                <td>
-                                    @product.Name
-                                </td>
-                                <td>
-                                    @product.Description
-                                </td>
-                                <td>
-                                    @($"{product.Price:C2}")
-                                </td>
-                                <td>
-                                    @($"{product.Stock:N2}")
-                                </td>
-                                <td>
-                                    @product.ProductCategoriesNumber
-                                </td>
-                                <td>
-                                    @product.ProductImagesNumber
-                                </td>
-                                <td>
-                                    <img src="@product.MainImage" style="width:100px;" />
-                                </td>
-                                <td>
-                                    <a href="/products/edit/@product.Id" class="btn btn-warning btn-sm"><i class="bi bi-pencil" /> Editar</a>
-                                    <button class="btn btn-danger btn-sm" @onclick=@(() => Delete(product.Id))><i class="bi bi-trash" /> Borrar</button>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </Body>
-        </GenericList>
-    </div>
-</div>
+@if (loading)
+{
+    <Loading />
+}
+else
+{
+    <MudTable Items="@Products"
+              @ref="table"
+              Dense="true"
+              Hover="true"
+              Striped="true"
+              FixedHeader="true"
+              FixedFooter="true">
 
+        <ToolBarContent>
+            <div class="d-flex justify-content-between w-100 align-items-center">
+                <MudText Typo="Typo.h6">Productos</MudText>
+                <MudButton Variant="Variant.Outlined"
+                           EndIcon="@Icons.Material.Filled.Add"
+                           Color="Color.Info"
+                           OnClick="@(() => NavigationManager.NavigateTo($"/products/create/"))">
+                    Nuevo
+                </MudButton>
+            </div>
+            <MudSpacer />
+            <FilterComponent ApplyFilter="ApplyFilterAsync" />
+        </ToolBarContent>
 
+        <HeaderContent>
+            <MudTh>Nombre</MudTh>
+            <MudTh>Descripción</MudTh>
+            <MudTh>Precio</MudTh>
+            <MudTh>Inventario</MudTh>
+            <MudTh>Categorías</MudTh>
+            <MudTh>Imágenes</MudTh>
+            <MudTh>Imagen Principal</MudTh>
+            <MudTh>Acciones</MudTh>
+        </HeaderContent>
+
+        <RowTemplate>
+            <MudTd DataLabel="Nombre">@context.Name</MudTd>
+            <MudTd DataLabel="Descripción">@context.Description</MudTd>
+            <MudTd DataLabel="Precio">@($"{context.Price:C2}")</MudTd>
+            <MudTd DataLabel="Inventario">@($"{context.Stock:N2}")</MudTd>
+            <MudTd DataLabel="Categorías">@context.ProductCategoriesNumber</MudTd>
+            <MudTd DataLabel="Imágenes">@context.ProductImagesNumber</MudTd>
+            <MudTd DataLabel="Imagen Principal">
+                <img src="@context.MainImage" style="width:100px;" />
+            </MudTd>
+            <MudTd>
+                <MudTooltip Text="Editar">
+                    <MudButton Variant="Variant.Filled"
+                               Color="Color.Warning"
+                               OnClick="@(() => NavigationManager.NavigateTo($"/products/edit/{context.Id}"))">
+                        <MudIcon Icon="@Icons.Material.Filled.Edit" />
+                    </MudButton>
+                </MudTooltip>
+                <MudTooltip Text="Borrar">
+                    <MudButton Variant="Variant.Filled"
+                               Color="Color.Error"
+                               OnClick="@(() => Delete(context.Id))">
+                        <MudIcon Icon="@Icons.Material.Filled.Delete" />
+                    </MudButton>
+                </MudTooltip>
+            </MudTd>
+        </RowTemplate>
+
+        <NoRecordsContent>
+            <MudText>No hay productos disponibles</MudText>
+        </NoRecordsContent>
+
+        <PagerContent>
+            <MudTablePager RowsPerPageString="Número de registros"
+                           PageSizeOptions="pageSizeOptions"
+                           AllItemsText="Todo"
+                           InfoFormat="@infoFormat" />
+        </PagerContent>
+
+    </MudTable>
+}

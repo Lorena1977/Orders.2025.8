@@ -2,9 +2,8 @@
 {
     public interface ILoginService
     {
-        Task LoginAsync(string token);
-
-        Task LogoutAsync();
+        Task LoginAsync(string token); //Le mandamos el Token y devuelve el método de login y registrar
+        Task LogoutAsync();//
     }
 
 }
