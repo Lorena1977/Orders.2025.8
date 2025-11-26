@@ -104,15 +104,19 @@ namespace Orders.Backend.Repositories.Implementations
             return await _userManager.UpdateAsync(user);
         }
 
+        //Método que genera el mail de confirmación
         public async Task<string> GenerateEmailConfirmationTokenAsync(User user)
         {
             return await _userManager.GenerateEmailConfirmationTokenAsync(user);
         }
 
+        //Método que confirma el mail.
         public async Task<IdentityResult> ConfirmEmailAsync(User user, string token)
         {
             return await _userManager.ConfirmEmailAsync(user, token);
         }
+
+
         public async Task<string> GeneratePasswordResetTokenAsync(User user)
         {
             return await _userManager.GeneratePasswordResetTokenAsync(user);

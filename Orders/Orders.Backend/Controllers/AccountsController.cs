@@ -23,11 +23,12 @@ namespace Orders.Backend.Controllers
         //Inyectamos el IFileStorage para guardar archivos del blogStorage.
         private readonly IFileStorage _fileStorage;
         private readonly string _container;
-
-
         private readonly IMailHelper _mailHelper;
 
-        public AccountsController(IUsersUnitOfWork usersUnitOfWork, IConfiguration configuration, IFileStorage fileStorage, IMailHelper mailHelper)
+        public AccountsController(IUsersUnitOfWork usersUnitOfWork, 
+            IConfiguration configuration, 
+            IFileStorage fileStorage, 
+            IMailHelper mailHelper)
         {
             _usersUnitOfWork = usersUnitOfWork;
             _configuration = configuration;
@@ -51,7 +52,12 @@ namespace Orders.Backend.Controllers
             if (result.Succeeded)
             {
                 await _usersUnitOfWork.AddUserToRoleAsync(user, user.UserType.ToString());
-                var response = await SendConfirmationEmailAsync(user);
+                //En vez de iniciar sesión una vez registrado el usuario (que es lo que hacíamos antes),
+                //enviamos un mail de confirmación al usuario.
+
+                //return Ok(BuildToken(user));
+                //return BadRequest(result.Errors.FirstOrDefault());
+                var response = await SendConfirmationEmailAsync(user);//El Token se lo vamos a mandar por mail.
                 if (response.WasSuccess)
                 {
                     return NoContent();
@@ -62,18 +68,18 @@ namespace Orders.Backend.Controllers
 
             return BadRequest(result.Errors.FirstOrDefault());
 
-            //return Ok(BuildToken(user));
-            //return BadRequest(result.Errors.FirstOrDefault());
+            
         }
 
+      
         private async Task<ActionResponse<string>> SendConfirmationEmailAsync(User user)
         {
-            var myToken = await _usersUnitOfWork.GenerateEmailConfirmationTokenAsync(user);
+            var myToken = await _usersUnitOfWork.GenerateEmailConfirmationTokenAsync(user);//Genera el Token. Ese token lo mandamos como un link en el correo.
             var tokenLink = Url.Action("ConfirmEmail", "accounts", new
             {
                 userid = user.Id,
                 token = myToken
-            }, HttpContext.Request.Scheme, _configuration["Url Frontend"]);
+            }, HttpContext.Request.Scheme, _configuration["Url Frontend"]); //Desde donde vamos a emitir el token.
 
             return _mailHelper.SendMail(user.FullName, user.Email!,
                 $"Orders - Confirmación de cuenta",
@@ -92,6 +98,8 @@ namespace Orders.Backend.Controllers
                 var user = await _usersUnitOfWork.GetUserAsync(model.Email);
                 return Ok(BuildToken(user));
             }
+            //Añadimos los casos por los que puede fallar el Login del usuario que tienen que ver con la 
+            //conformación del mail.
             if (result.IsLockedOut)
             {
                 return BadRequest("Ha superado el máximo número de intentos, su cuenta está bloqueada, intente de nuevo en 5 minutos.");
@@ -214,17 +222,17 @@ namespace Orders.Backend.Controllers
             return NoContent();
         }
 
-
+        //Metódo para poder confirmar el mail.
         [HttpGet("ConfirmEmail")]
         public async Task<IActionResult> ConfirmEmailAsync(string userId, string token)
         {
-            token = token.Replace(" ", "+");
+            token = token.Replace(" ", "+"); //Para que el token me coincida, reemplazo " " por "+" en el token.
             var user = await _usersUnitOfWork.GetUserAsync(new Guid(userId));
             if (user == null)
             {
                 return NotFound();
             }
-            var result = await _usersUnitOfWork.ConfirmEmailAsync(user, token);
+            var result = await _usersUnitOfWork.ConfirmEmailAsync(user, token); //Lo confirmamos con el token que nos llegó por correo.
             if (!result.Succeeded)
             {
                 return BadRequest(result.Errors.FirstOrDefault());

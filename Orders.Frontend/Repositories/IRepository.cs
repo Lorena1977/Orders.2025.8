@@ -15,6 +15,7 @@
 
         Task<HttpResponseWrapper<TActionResponse>> PutAsync<T, TActionResponse>(string url, T model);//Método sobrecargado del Put.
         //Lo usaré cuando lo que yo mando no es igual que lo que yo recibo
-        Task<HttpResponseWrapper<object>> GetAsync(string url);
+        Task<HttpResponseWrapper<object>> GetAsync(string url); //Método que no devuelve nada para disparar acciones. Necesito que 
+        //cuando confirme el mail me dispare una acción.
     }
 }

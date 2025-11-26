@@ -101,7 +101,7 @@ builder.Services.AddScoped<IProductsUnitOfWork, ProductsUnitOfWork>();
 //188. Añadimos además cuales son las condiciones del Password que tiene que introducir usuario.
 builder.Services.AddIdentity<User, IdentityRole>(x =>
 {
-    x.Tokens.AuthenticatorTokenProvider = TokenOptions.DefaultAuthenticatorProvider;
+    x.Tokens.AuthenticatorTokenProvider = TokenOptions.DefaultAuthenticatorProvider; //Necesitamos que el usuario tenga un mail confirmado
     x.SignIn.RequireConfirmedEmail = true;
 
     x.User.RequireUniqueEmail = true;//El usuario requiere un único email
@@ -111,8 +111,10 @@ builder.Services.AddIdentity<User, IdentityRole>(x =>
     x.Password.RequireNonAlphanumeric = false; 
     x.Password.RequireUppercase = false; //No requiere mayusculas
     
-    x.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
-    x.Lockout.MaxFailedAccessAttempts = 3;
+    //Esto le pone seguridad al sistema. Habilitamos el bloqueo
+    x.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5); //Cuando un usuario se equivoque n-veces (3 veces) ingresando el password
+                                                                // lo bloqueamos 5 minutos lo bloqueamos 5 minutos
+    x.Lockout.MaxFailedAccessAttempts = 3; //Número de Intentos.
     x.Lockout.AllowedForNewUsers = true;
 })
     .AddEntityFrameworkStores<DataContext>()

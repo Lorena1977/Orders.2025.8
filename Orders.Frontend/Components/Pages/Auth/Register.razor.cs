@@ -167,7 +167,7 @@ namespace Orders.Frontend.Components.Pages.Auth
             Snackbar.Add("Por favor llena todos los campos del formulario.", Severity.Warning);
         }
 
-        //Método que permite crear un usuario. Devuelve un Token .
+        //Método que permite crear un usuario. Si pudo, lo registra y manda el correo.
         private async Task CreateUserAsync()
         {
             loading = true;
@@ -181,6 +181,8 @@ namespace Orders.Frontend.Components.Pages.Auth
                 await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
                 return;
             }
+
+            //En vez de loggearse, mandamos un mensaje de confirmación.
 
             await SweetAlertService.FireAsync("Confirmación", "Su cuenta ha sido creada con éxito. Se te ha enviado un correo electrónico con las instrucciones para activar tu usuario.", SweetAlertIcon.Info);
             NavigationManager.NavigateTo("/");

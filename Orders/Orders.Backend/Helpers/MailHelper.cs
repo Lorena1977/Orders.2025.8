@@ -7,7 +7,7 @@ namespace Orders.Backend.Helpers
 {
     public class MailHelper : IMailHelper
     {
-        private readonly IConfiguration _configuration;
+        private readonly IConfiguration _configuration; //Accede a los valores de configuración de appsettings.json imyectando el IConfiguration
 
         public MailHelper(IConfiguration configuration)
         {
@@ -28,7 +28,7 @@ namespace Orders.Backend.Helpers
                 message.From.Add(new MailboxAddress(name, from));
                 message.To.Add(new MailboxAddress(toName, toEmail));
                 message.Subject = subject;
-                BodyBuilder bodyBuilder = new BodyBuilder
+                BodyBuilder bodyBuilder = new BodyBuilder 
                 {
                     HtmlBody = body
                 };
@@ -41,7 +41,6 @@ namespace Orders.Backend.Helpers
                     client.Send(message);
                     client.Disconnect(true);
                 }
-
                 return new ActionResponse<string> { WasSuccess = true };
             }
             catch (Exception ex)
