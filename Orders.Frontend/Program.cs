@@ -7,6 +7,7 @@ using Orders.Frontend.AuthenticationProviders;
 using Orders.Frontend.Repositories;
 using Orders.Frontend.Services;
 
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add MudBlazor services

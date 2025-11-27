@@ -258,7 +258,7 @@ namespace Orders.Backend.Controllers
             return BadRequest(response.Message);
         }
 
-        
+        //Método que permite recuperar la contraseña cuando se olvida.
         [HttpPost("RecoverPassword")]
         public async Task<IActionResult> RecoverPasswordAsync([FromBody] EmailDTO model)
         {
@@ -289,6 +289,7 @@ namespace Orders.Backend.Controllers
             return BadRequest(response.Message);
         }
 
+        //Método que permite resetear la contraseña.
         [HttpPost("ResetPassword")]
         public async Task<IActionResult> ResetPasswordAsync([FromBody] ResetPasswordDTO model)
         {

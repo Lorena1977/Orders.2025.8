@@ -31,7 +31,7 @@ namespace Orders.Frontend.Components.Pages.Auth
         private void ShowModalRecoverPassword()
         {
             var closeOnEscapeKey = new DialogOptions() { CloseOnEscapeKey = true, CloseButton = true, MaxWidth = MaxWidth.ExtraLarge };
-            //DialogService.ShowAsync<RecoverPassword>("Rec. contraseña", closeOnEscapeKey);
+            DialogService.ShowAsync<RecoverPassword>("Rec. contraseña", closeOnEscapeKey);
         }
 
         //Cuando el usaario pulse Cerrar
