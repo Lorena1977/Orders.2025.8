@@ -207,6 +207,7 @@ namespace Orders.Backend.Repositories.Implementations
             }
         }
 
+        //Método que añade más fotos al producto
         public async Task<ActionResponse<ImageDTO>> AddImageAsync(ImageDTO imageDTO)
         {
             var product = await _context.Products
@@ -241,6 +242,7 @@ namespace Orders.Backend.Repositories.Implementations
         }
 
 
+        //Método que elimina una foto.
         public async Task<ActionResponse<ImageDTO>> RemoveLastImageAsync(ImageDTO imageDTO)
         {
             var product = await _context.Products
@@ -319,12 +321,6 @@ namespace Orders.Backend.Repositories.Implementations
                 };
             }
         }
-
-
-
-
-
-
 
     }
 

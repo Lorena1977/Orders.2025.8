@@ -19,6 +19,7 @@ namespace Orders.Frontend.Repositories
 
         //METODOS GET, POST, PUT, DELETE
         //Método que devuelve las entidades que se rutean en el URL que le mando.
+
         public async Task<HttpResponseWrapper<T>> GetAsync<T>(string url)
         {
             HttpResponseMessage responseHttp = await _httpClient.GetAsync(url);

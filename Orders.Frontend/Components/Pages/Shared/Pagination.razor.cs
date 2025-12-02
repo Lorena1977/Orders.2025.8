@@ -14,6 +14,7 @@ namespace Orders.Frontend.Components.Pages.Shared
         [Parameter] public EventCallback<int> SelectedPage { get; set; }
         [Parameter] public int TotalPages { get; set; }
         [Parameter] public bool IsHome { get; set; } = false;
+  
         protected override void OnParametersSet()
         {
             BuildPages();

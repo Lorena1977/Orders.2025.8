@@ -5,24 +5,29 @@
 
     
     <MudCard Class="mt-4">
-        <!-- Header -->
+        <!-- Header Contiene los botones Guardar Cambios y Regresar-->
         <MudCardHeader>
             <MudText Typo="Typo.h6" Class="me-auto">Crear Nuevo Producto</MudText>
             <MudStack Direction="Row" Spacing="1">
-                <MudButton Variant="Variant.Filled" Color="Color.Primary" Type="Submit" StartIcon="@Icons.Material.Filled.Save">
+                <MudButton Variant="Variant.Filled" 
+                           Color="Color.Primary"
+                           ButtonType="ButtonType.Submit"                         
+                           StartIcon="@Icons.Material.Filled.Save">                           
                     Guardar Cambios
                 </MudButton>
-                 <MudButton Variant="Variant.Filled" Color="Color.Success" StartIcon="@Icons.Material.Filled.ArrowBack"
-                           OnClick="@(() => NavigationManager.NavigateTo("/products"))">
+                 <MudButton Variant="Variant.Filled" 
+                            Color="Color.Success" 
+                            StartIcon="@Icons.Material.Filled.ArrowBack"
+                            OnClick="@(() => NavigationManager.NavigateTo("/products"))">
                     Regresar
                 </MudButton>
             </MudStack>
         </MudCardHeader>
 
-                <!-- Body -->
+      <!-- Body -->
         <MudCardContent>
             <MudGrid>
-                <!-- Columna izquierda -->
+                <!-- Columna izquierda  Contiene los campos del producto->
                 <MudItem xs="12" sm="6">
                     <MudTextField @bind-Value="ProductDTO.Name" Label="Nombre" Required="true" For="@(() => ProductDTO.Name)" />
                     <MudTextField @bind-Value="ProductDTO.Description" Label="Descripción" Required="true" For="@(() => ProductDTO.Description)" />
@@ -30,9 +35,8 @@
                     <MudNumericField @bind-Value="ProductDTO.Stock" Label="Inventario" Required="true" For="@(() => ProductDTO.Stock)" />
                 </MudItem>
 
-                <!-- Columna derecha -->
+                <!-- Columna derecha contiene-->
                 <MudItem xs="12" sm="6">
-                    <!-- Columna derecha -->
                       <MudText Typo="Typo.subtitle2" Class="mb-2">Categorías:</MudText>
                     <MudText Typo="Typo.body2">
                         <MultipleSelector NonSelected="NonSelected" Selected="Selected" />
@@ -46,11 +50,17 @@
                         </MudText>
                         @if (IsEdit)
                         {
-                            <MudStack Direction="Row" Spacing="1">
-                                <MudButton Variant="Variant.Outlined" Color="Color.Error" OnClick="@(() => RemoveImageAction.InvokeAsync())" StartIcon="@Icons.Material.Filled.Delete">
-                                    Eliminar Última Imagen
+                            <MudStack Direction="Row" Spacing="1">                                
+                                <MudButton Variant="Variant.Outlined" 
+                                           Color="Color.Primary" 
+                                           OnClick="@(() => AddImageAction.InvokeAsync())" 
+                                           StartIcon="@Icons.Material.Filled.Add">
+                                    Agregar Imagen
                                 </MudButton>
-                                <MudButton Variant="Variant.Outlined" Color="Color.Error" OnClick="@(() => AddImageAction.InvokeAsync())" StartIcon="@Icons.Material.Filled.Delete">
+                                <MudButton Variant="Variant.Outlined"
+                                           Color="Color.Error"
+                                           OnClick="@(() => RemoveImageAction.InvokeAsync())"
+                                           StartIcon="@Icons.Material.Filled.Delete">
                                     Eliminar Última Imagen
                                 </MudButton>
                             </MudStack>

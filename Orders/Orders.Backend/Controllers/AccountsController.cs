@@ -189,7 +189,9 @@ namespace Orders.Backend.Controllers
             }
         }
 
+
         //Método Get con Token (con autorización) para poder obtener información de mi usuario solamente.
+        [AllowAnonymous]
         [HttpGet]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> GetAsync()
@@ -223,6 +225,7 @@ namespace Orders.Backend.Controllers
         }
 
         //Metódo para poder confirmar el mail.
+        [AllowAnonymous]
         [HttpGet("ConfirmEmail")]
         public async Task<IActionResult> ConfirmEmailAsync(string userId, string token)
         {

@@ -13,11 +13,12 @@ namespace Orders.Backend.Repositories.Interfaces
         //-n productos en Prodcutscategories y los n productos en Productsimages
         Task<ActionResponse<Product>> UpdateFullAsync(ProductDTO productDTO); //Lo mismo a la hora
         // de actualizar.   
-        Task<ActionResponse<Product>> DeleteAsync(int id);
 
 
         Task<ActionResponse<ImageDTO>> AddImageAsync(ImageDTO imageDTO);
         Task<ActionResponse<ImageDTO>> RemoveLastImageAsync(ImageDTO imageDTO);
+
+        Task<ActionResponse<Product>> DeleteAsync(int id); //Para borrar productos con categorias relacionadas
 
     }
 
