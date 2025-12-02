@@ -19,15 +19,13 @@ namespace Orders.Backend.Repositories.Implementations
             _fileStorage = fileStorage;
         }
 
-
-
-
         //Metodo que recupera las imágenes y las categorias. Añado la posibilidad de filtro.
         public override async Task<ActionResponse<IEnumerable<Product>>> GetAsync(PaginationDTO pagination)
         {
             var queryable = _context.Products
-                .Include(x => x.ProductImages)
+                .Include(x => x.ProductImages) //Carga las imagenes (Colección de Product)
                 .Include(x => x.ProductCategories)
+                //.ThenInclude(pc => pc.Category) //Entidad categoria real dentro de esa union
                 .AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(pagination.Filter))
@@ -64,7 +62,7 @@ namespace Orders.Backend.Repositories.Implementations
             };
         }
 
-        //Metodo que devuelve la descripción de la categoría.
+        //Metodo que devuelve las categorias, las imágenes y la descripción de la categoría.
         public override async Task<ActionResponse<Product>> GetAsync(int id)
         {
             var product = await _context.Products
@@ -104,12 +102,15 @@ namespace Orders.Backend.Repositories.Implementations
                     ProductImages = new List<ProductImage>()
                 };
 
+                //Por cada imagen convertimos a base64 la imagen y la guardamos en el storage.
+
                 foreach (var productImage in productDTO.ProductImages!)
                 {
                     var photoProduct = Convert.FromBase64String(productImage);
                     newProduct.ProductImages.Add(new ProductImage { Image = await _fileStorage.SaveFileAsync(photoProduct, ".jpg", "products") });
                 }
 
+                //Adicionamos cada categoría del producto.
                 foreach (var productCategoryId in productDTO.ProductCategoryIds!)
                 {
                     var category = await _context.Categories.FirstOrDefaultAsync(x => x.Id == productCategoryId);

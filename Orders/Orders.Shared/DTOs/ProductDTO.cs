@@ -32,8 +32,8 @@ namespace Orders.Shared.DTOs
         [Display(Name = "Inventario")]
         [Required(ErrorMessage = "El campo {0} es obligatorio.")]
         public float Stock { get; set; }
-        public List<int>? ProductCategoryIds { get; set; } //Categorias de los productos
-        public List<string>? ProductImages { get; set; } //Imagenes de los productos.
+        public List<int>? ProductCategoryIds { get; set; } //Lista de Ids con las Categorias de los productos
+        public List<string>? ProductImages { get; set; } //Lista de las Imagenes de los productos en base64.
     }
 
 }

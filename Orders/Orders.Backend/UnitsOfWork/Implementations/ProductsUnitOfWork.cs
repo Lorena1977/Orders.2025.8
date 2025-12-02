@@ -15,7 +15,7 @@ namespace Orders.Backend.UnitsOfWork.Implementations
             _productsRepository = productsRepository;
         }
 
-        public override async Task<ActionResponse<IEnumerable<Product>>> GetAsync(PaginationDTO pagination) => await _productsRepository.GetAsync(pagination);
+       public override async Task<ActionResponse<IEnumerable<Product>>> GetAsync(PaginationDTO pagination) => await _productsRepository.GetAsync(pagination);
 
         public async Task<ActionResponse<int>> GetTotalPagesAsync(PaginationDTO pagination) => await _productsRepository.GetTotalRecordsAsync(pagination);
 

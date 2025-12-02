@@ -131,9 +131,9 @@ code {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding: 5px;   
+    padding: 5px
 }
 
-.multiple-selector-botones button {
+    .multiple-selector-botones button {
         margin: 5px;
-}
+    }

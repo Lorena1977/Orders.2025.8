@@ -1,4 +1,5 @@
-﻿@page "/products"
+﻿
+@page "/products"
 
 @if (loading)
 {
@@ -14,21 +15,33 @@ else
               FixedHeader="true"
               FixedFooter="true">
 
-        <ToolBarContent>
-            <div class="d-flex justify-content-between w-100 align-items-center">
-                <MudText Typo="Typo.h6">Productos</MudText>
+        <ToolBarContent>          
+            <!-- Línea 1: Título + botón + filtro -->
+             <div class="d-flex jflex-row w-100 align-items-center">
+                 <MudText Typo="Typo.h6" Class="me-auto">Productos</MudText>
                 <MudButton Variant="Variant.Outlined"
                            EndIcon="@Icons.Material.Filled.Add"
                            Color="Color.Info"
                            OnClick="@(() => NavigationManager.NavigateTo($"/products/create/"))">
-                    Nuevo
+                    Nuevo Producto
                 </MudButton>
+                <div class="ms-3">
+                <FilterComponent ApplyFilter="ApplyFilterAsync" />
+                </div>
             </div>
-            <MudSpacer />
-            <FilterComponent ApplyFilter="ApplyFilterAsync" />
+
+           @*  <div Class="d-flex flex-row w-100 justify-content-end align-items-center">
+                <Pagination CurrentPage="currentPage"
+                            TotalPages="totalPages"
+                            SelectedPage="SelectedPageAsync"
+                            RecordsNumber="SelectedRecordsNumberAsync" />
+                <MudSpacer />
+            </div> *@
+           
+
         </ToolBarContent>
 
-        <HeaderContent>
+        <HeaderContent>          
             <MudTh>Nombre</MudTh>
             <MudTh>Descripción</MudTh>
             <MudTh>Precio</MudTh>
@@ -79,4 +92,5 @@ else
         </PagerContent>
 
     </MudTable>
+   
 }

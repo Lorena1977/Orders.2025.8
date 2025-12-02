@@ -6,7 +6,7 @@ namespace Orders.Backend.Repositories.Interfaces
 {
     public interface IProductsRepository
     {
-        Task<ActionResponse<Product>> GetAsync(int id); //Relaciones con categorias e imagenes cuando pido un prodcucto
+        Task<ActionResponse<Product>> GetAsync(int id); //Relaciones con categorias e imagenes cuando pido un producto
         Task<ActionResponse<IEnumerable<Product>>> GetAsync(PaginationDTO pagination);
         Task<ActionResponse<int>> GetTotalRecordsAsync(PaginationDTO pagination);
         Task<ActionResponse<Product>> AddFullAsync(ProductDTO productDTO); //El es capaz de crear los

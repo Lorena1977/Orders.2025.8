@@ -20,15 +20,14 @@ namespace Orders.Frontend.Components.Pages.Products
         private readonly int[] pageSizeOptions = { 10, 25, 50, int.MaxValue };//Cosecha propia
         private const string baseUrl = "api/products";//Cosecha propia
         private string infoFormat = "{first_item}-{last_item} => {all_items}";//Cosecha propia
-        [Inject] private IDialogService DialogService { get; set; } = null!; //Cosecha propia
-        [Inject] private ISnackbar Snackbar { get; set; } = null!; //Cosecha propia
+        
 
 
         [Inject] private NavigationManager NavigationManager { get; set; } = null!;
         [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;
         [Inject] private IRepository Repository { get; set; } = null!;
-
-
+        [Inject] private IDialogService DialogService { get; set; } = null!; //Cosecha propia
+        [Inject] private ISnackbar Snackbar { get; set; } = null!; //Cosecha propia
 
 
         [Parameter, SupplyParameterFromQuery] public string Page { get; set; } = string.Empty;
@@ -40,11 +39,12 @@ namespace Orders.Frontend.Components.Pages.Products
             await LoadAsync();
         }
 
+
         private async Task SelectedRecordsNumberAsync(int recordsnumber)
         {
             RecordsNumber = recordsnumber;
             int page = 1;
-            await LoadAsync(page);
+            await LoadAsync(page); //Carga los productos del Api
             await SelectedPageAsync(page);
         }
 
