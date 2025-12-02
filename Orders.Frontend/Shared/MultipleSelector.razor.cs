@@ -14,6 +14,8 @@ namespace Orders.Frontend.Shared
         [Parameter]
         public List<MultipleSelectorModel> Selected { get; set; } = new(); //Lista de categorias seleccionadas
 
+
+
         //Metodo para agregar una lista
         private void Select(MultipleSelectorModel item)
         {

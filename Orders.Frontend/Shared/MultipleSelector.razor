@@ -1,22 +1,57 @@
-﻿<div class="multiple-selector">
-    <ul class="selectable-ul">
-        @foreach (var item in NonSelected)
-        {
-            <li @onclick=@(() => Select(item))>@item.Value</li>
-        }
-    </ul>
-    <div class="selector-multiple-botones">
-        <div class="mx-2 my-2">
-            <p><button type="button" @onclick="SelectAll">@addAllText</button></p>
-        </div>
-        <div class="mx-2 my-2">
-            <p><button type="button" @onclick="UnselectAll">@removeAllText</button></p>
-        </div>
-    </div>
-    <ul class="selectable-ul">
-        @foreach (var item in Selected)
-        {
-            <li @onclick=@(() => Unselect(item))>@item.Value</li>
-        }
-    </ul>
-</div>
+﻿@using MudBlazor
+<MudGrid>
+    <!-- Lista de no seleccionados -->
+    <MudItem xs="12" sm="6">
+        <MudPaper Class="p-2" Outlined="true" Style="max-height:200px; overflow-y:auto;">
+            <MudText Typo="Typo.subtitle2" Class="mb-2">No seleccionados</MudText>
+            <div style="display:flex; flex-wrap:wrap; align-items:flex-start; gap:4px;">
+                @foreach (var item in NonSelected)
+                {
+                    <MudButton Variant="Variant.Text"
+                               Size="Size.Small"
+                               Color="Color.Primary"       
+                               Style="max-width:150px; text-align:left;"
+                               OnClick="async () => Select(item)">
+                        @item.Value
+                    </MudButton>
+                                     
+                }
+             </div>
+
+            <MudStack Direction="Row" Spacing="1" Class="mt-2">
+                <MudButton Variant="Variant.Filled"
+                            Color="Color.Primary" 
+                            OnClick="SelectAll">
+                    Seleccionar Todo
+                </MudButton>
+            </MudStack>
+        </MudPaper>
+    </MudItem>
+
+    <!-- Lista de seleccionados -->
+    <MudItem xs="12" sm="6">
+        <MudPaper Class="p-2" Outlined="true" Style="max-height:200px; overflow-y:auto;">
+            <MudText Typo="Typo.subtitle2" Class="mb-2">Seleccionados</MudText>
+             <div style="display:flex; flex-wrap:wrap; align-items:flex-start; gap:4px;">
+                @foreach (var item in Selected)
+                {
+                    <MudButton Variant="Variant.Text"
+                               Size="Size.Small"
+                               Color="Color.Primary"
+                                Style="max-width:150px; text-align:left;"
+                               OnClick="async () => Select(item)">
+                        @item.Value
+                    </MudButton>                
+                }
+           
+           </div>
+
+           <MudStack Direction="Row" Spacing="1" Class="mt-2">
+                <MudButton Variant="Variant.Filled" Color="Color.Error" OnClick="UnselectAll">
+                    Deseleccionar Todo
+                </MudButton>
+            </MudStack>
+        </MudPaper>
+    </MudItem>
+</MudGrid>
+

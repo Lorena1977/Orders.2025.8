@@ -19,10 +19,11 @@ namespace Orders.Frontend.Components.Pages.Products
         private List<MultipleSelectorModel> NonSelected { get; set; } = new();
 
         [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;
+        [Inject] private NavigationManager NavigationManager { get; set; } //Cosecha Propia.
         [Parameter, EditorRequired] public ProductDTO ProductDTO { get; set; } = null!;
         [Parameter, EditorRequired] public EventCallback OnValidSubmit { get; set; }
         [Parameter, EditorRequired] public EventCallback ReturnAction { get; set; }
-        [Parameter, EditorRequired] public List<Category> NonSelectedCategories { get; set; } = new();
+        [Parameter, EditorRequired] public List<Category> NonSelectedCategories { get; set; } = new(); //Lista categorías no seleccionadas
         [Parameter] public bool IsEdit { get; set; } = false;
         [Parameter] public EventCallback AddImageAction { get; set; }
         [Parameter] public EventCallback RemoveImageAction { get; set; }
@@ -33,12 +34,13 @@ namespace Orders.Frontend.Components.Pages.Products
 
         protected override void OnInitialized()
         {
-            editContext = new(ProductDTO);
+            editContext = new(ProductDTO); 
 
-            Selected = SelectedCategories.Select(x => new MultipleSelectorModel(x.Id.ToString(), x.Name)).ToList();
+            Selected = SelectedCategories.Select(x => new MultipleSelectorModel(x.Id.ToString(), x.Name)).ToList(); //Cargamos las categorias seleccionadas
             NonSelected = NonSelectedCategories.Select(x => new MultipleSelectorModel(x.Id.ToString(), x.Name)).ToList();
         }
 
+        //Método que permite adicionar una imagen al producto
         private void ImageSelected(string imagenBase64)
         {
             if (ProductDTO.ProductImages is null)

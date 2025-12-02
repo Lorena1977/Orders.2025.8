@@ -15,34 +15,55 @@ else
               FixedHeader="true"
               FixedFooter="true">
 
-        <ToolBarContent>          
+        <ToolBarContent>
             <!-- Línea 1: Título + botón + filtro -->
-             <div class="d-flex jflex-row w-100 align-items-center">
-                 <MudText Typo="Typo.h6" Class="me-auto">Productos</MudText>
+            <div class="d-flex jflex-row w-100 align-items-center">
+                <MudText Typo="Typo.h6" Class="me-auto">Productos</MudText>
                 <MudButton Variant="Variant.Outlined"
                            EndIcon="@Icons.Material.Filled.Add"
                            Color="Color.Info"
                            OnClick="@(() => NavigationManager.NavigateTo($"/products/create/"))">
                     Nuevo Producto
                 </MudButton>
+
                 <div class="ms-3">
-                <FilterComponent ApplyFilter="ApplyFilterAsync" />
+                    <FilterComponent ApplyFilter="ApplyFilterAsync" />
                 </div>
             </div>
 
-           @*  <div Class="d-flex flex-row w-100 justify-content-end align-items-center">
-                <Pagination CurrentPage="currentPage"
-                            TotalPages="totalPages"
-                            SelectedPage="SelectedPageAsync"
-                            RecordsNumber="SelectedRecordsNumberAsync" />
-                <MudSpacer />
+            <!-- Línea 2: Paginación (separada con mt-3) -->
+          @*   <div class="d-flex flex-row w-100 justify-content-end align-items-center gap-2 mt-3">
+
+                <MudButton Variant="Variant.Filled"
+                            Color="Color.Primary"                           
+                            Disabled="@(currentPage == 1)"
+                            OnClick="@(() => SelectedPageAsync(currentPage - 1))">
+                    Anterior
+                </MudButton>
+
+                @for (int i = 1; i <= totalPages; i++)
+                {
+                    var pageNumber = i; 
+                    <MudButton Variant="Variant.Outlined"
+                               Color="@(i == currentPage ? Color.Primary : Color.Default)"
+                               OnClick="@(() => SelectedPageAsync(i))">
+                        @pageNumber
+                    </MudButton>
+                }
+
+                <MudButton Variant="Variant.Filled"
+                           Color="Color.Primary"
+                           Disabled="@(currentPage == totalPages)"
+                           OnClick="@(() => SelectedPageAsync(currentPage + 1))">
+                    Siguiente
+                </MudButton>
+
             </div> *@
-           
 
         </ToolBarContent>
 
-        <HeaderContent>          
-            <MudTh>Nombre</MudTh>
+        <HeaderContent>
+            <MudTh Typo="Typo.subtitle2" Class="fw-bold">Nombre</MudTh>
             <MudTh>Descripción</MudTh>
             <MudTh>Precio</MudTh>
             <MudTh>Inventario</MudTh>
@@ -92,5 +113,5 @@ else
         </PagerContent>
 
     </MudTable>
-   
+
 }
