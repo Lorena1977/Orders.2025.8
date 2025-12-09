@@ -21,6 +21,8 @@ builder.Services.AddRazorComponents().AddInteractiveServerComponents();
 //AddTrasient: cada vez que inyecto lo está llamando por cada petición Http.
 //AddSingleton: Se mantiene una única instancia del objeto por todo el ciclo de vida de la aplicacion.(están en memoria)
 builder.Services.AddSingleton(_ => new HttpClient { BaseAddress = new Uri("https://localhost:7111") });
+//builder.Services.AddSingleton(_ => new HttpClient { BaseAddress = new Uri("http://localhost:5219") });
+
 // Necesita que le autoricen las cosas, y vamos a usar el AuthenticatioProviderTest creado.
 builder.Services.AddAuthorizationCore();
 //builder.Services.AddScoped<AuthenticationStateProvider, AuthenticationProviderTest>(); //Se borra porque incluimos el AuthentificationProviderJWT

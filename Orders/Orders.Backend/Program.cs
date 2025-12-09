@@ -99,6 +99,15 @@ builder.Services.AddScoped<IMailHelper, MailHelper>();
 builder.Services.AddScoped<IProductsRepository, ProductsRepository>();
 builder.Services.AddScoped<IProductsUnitOfWork, ProductsUnitOfWork>();
 
+//406 Agregamos la inyección de las orders.
+builder.Services.AddScoped<ITemporalOrdersRepository, TemporalOrdersRepository>();
+builder.Services.AddScoped<ITemporalOrdersUnitOfWork, TemporalOrdersUnitOfWork>();
+
+//573 Agregamos la inyeccion de los pedidos
+builder.Services.AddScoped<IOrdersHelper, OrdersHelper>();
+builder.Services.AddScoped<IOrdersRepository, OrdersRepository>();
+builder.Services.AddScoped<IOrdersUnitOfWork, OrdersUnitOfWork>();
+
 //188. Añadimos además cuales son las condiciones del Password que tiene que introducir usuario.
 builder.Services.AddIdentity<User, IdentityRole>(x =>
 {

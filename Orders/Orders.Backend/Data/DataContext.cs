@@ -21,7 +21,9 @@ namespace Orders.Backend.Data
         public DbSet<Product> Products { get; set; }
         public DbSet<ProductCategory> ProductCategories { get; set; }
         public DbSet<ProductImage> ProductImages { get; set; }
-
+        public DbSet<TemporalOrder> TemporalOrders { get; set; }
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderDetail> OrderDetails { get; set; }
 
 
         //Queremos en las tablas que vayaos a crear tengan un índice (en el campo Name) y que sea único para que no

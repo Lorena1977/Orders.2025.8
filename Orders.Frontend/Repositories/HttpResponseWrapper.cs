@@ -30,6 +30,7 @@ namespace Orders.Frontend.Repositories
             if (statusCode == HttpStatusCode.BadRequest)
             {
                 return await HttpResponseMessage.Content.ReadAsStringAsync();
+       
             }
             if (statusCode == HttpStatusCode.Unauthorized)
             {

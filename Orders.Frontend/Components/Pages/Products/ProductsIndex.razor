@@ -28,6 +28,18 @@ else
 
                 <div class="ms-3">
                     <FilterComponent ApplyFilter="ApplyFilterAsync" />
+                    <!--<MudTextField Value="SearchText"
+                                  ValueChanged="@(async (string value) =>
+                                                {
+                                                    SearchText = value;
+                                                    await FilterCallBack(value);
+                                                })"
+                              Placeholder="Buscar producto..."
+                              Adornment="Adornment.Start"
+                              AdornmentIcon="@Icons.Material.Filled.Search"
+                              Variant="Variant.Outlined"
+                              Margin="Margin.Dense"
+                          Class="mb-4" />-->
                 </div>
             </div>
 

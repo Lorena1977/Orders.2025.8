@@ -1,0 +1,84 @@
+﻿@page "/products/details/{ProductId:int}"
+@using MudBlazor
+
+@if (loading)
+{
+    <Loading />
+}
+else
+{
+    <MudPaper Class="pa-4">
+
+        <MudCard>
+            <MudCardHeader>
+                <MudStack Direction="Row" AlignItems="AlignItems.Center" JustifyContent="SpaceBetween" Class="mb-3">
+                    <MudText Typo="Typo.h5">
+                        <MudIcon Icon="@Icons.Material.Filled.Star" Class="me-2" />
+                        @product!.Name
+                    </MudText>
+
+                    <MudButton Class="float-end" Variant="Variant.Filled" Color="Color.Success" Href="/">
+                        <MudIcon Icon="@Icons.Material.Filled.ArrowBack" Class="me-2" /> Regresar
+                    </MudButton>
+                </MudStack>
+            </MudCardHeader>
+
+            <MudCardContent>
+
+                <MudGrid>
+                    <MudItem xs="12" md="6">
+                        <MudText><b>Nombre:</b></MudText>
+                        <MudText Class="mb-3">@product.Name</MudText>
+
+                        <MudText><b>Descripción:</b></MudText>
+                        <MudText Class="mb-3">@product.Description</MudText>
+
+                        <MudText><b>Precio:</b></MudText>
+                        <MudText Class="mb-3">@($"{product.Price:C2}")</MudText>
+
+                        <MudText><b>Inventario:</b></MudText>
+                        <MudText Class="mb-3">@($"{product.Stock:N2}")</MudText>
+
+                        <MudText><b>Categorías:</b></MudText>
+
+                        @foreach (var category in categories!)
+                        {
+                            <MudChip T="string" Class="me-2" Color="Color.Primary" Variant="Variant.Outlined" Size="Size.Small">
+                                @category
+                            </MudChip>
+                        }
+                    </MudItem>
+
+                    <MudItem xs="12" md="6">
+                        <EditForm Model="TemporalOrderDTO" OnValidSubmit="AddToCartAsync">
+                            <DataAnnotationsValidator />
+
+                            <MudTextField Label="Cantidad"
+                                          @bind-Value="@TemporalOrderDTO.Quantity"
+                                          For="@(() => TemporalOrderDTO.Quantity)"
+                                          Type="InputType.Number"
+                                          Class="mb-4" />
+
+                            <MudTextField Label="Comentarios"
+                                          @bind-Value="@TemporalOrderDTO.Remarks"
+                                          For="@(() => TemporalOrderDTO.Remarks)"
+                                          Class="mb-4" />
+
+                            <MudButton Variant="Variant.Filled"
+                                       Color="Color.Primary"
+                                       ButtonType="ButtonType.Submit"
+                                       StartIcon="@Icons.Material.Filled.AddShoppingCart">
+                                Agregar al Carro de Compras
+                            </MudButton>
+                        </EditForm>
+                    </MudItem>
+
+                </MudGrid>
+
+                <CarouselView Images="images" />
+
+            </MudCardContent>
+        </MudCard>
+    </MudPaper>
+}
+

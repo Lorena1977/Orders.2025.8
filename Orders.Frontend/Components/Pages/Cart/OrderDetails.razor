@@ -1,0 +1,160 @@
+﻿@page "/cart/orderDetails/{OrderId:int}"
+
+@if (order is null)
+{
+    <Loading />
+}
+else
+{
+    <MudCard Class="pa-4">
+
+        <!-- HEADER -->
+        <MudCardHeader>
+            <MudGrid AlignItems="Center">
+                <MudItem xs="8">
+                    <MudText Typo="Typo.h5">                        
+                        <MudIcon Icon="@Icons.Material.Filled.AttachMoney" Class="mr-2" />
+                        @order.User!.FullName
+                    </MudText>
+                </MudItem>
+
+                <MudItem xs="4" Class="d-flex justify-end">
+
+                    <!-- BOTONES PARA USER -->
+                    @if (order.OrderStatus == OrderStatus.New)
+                    {
+                        <MudButton Color="Color.Error"
+                                   Variant="Variant.Filled"
+                                   Size="Size.Small"
+                                   StartIcon="@Icons.Material.Filled.Delete"
+                                   Class="mx-1"
+                                   OnClick="CancelOrderAsync">
+                            Cancelar
+                        </MudButton>
+
+                        <AuthorizeView Roles="User">
+                            <Authorized>
+                                <MudButton Color="Color.Primary"
+                                           Variant="Variant.Filled"
+                                           Size="Size.Small"
+                                           StartIcon="@Icons.Material.Filled.LocalShipping"
+                                           Class="mx-1"
+                                           OnClick="DispatchOrderAsync">
+                                    Despachar
+                                </MudButton>
+                            </Authorized>
+                        </AuthorizeView>
+                    }
+
+                    <!-- BOTONES PARA ADMIN -->
+                    <AuthorizeView Roles="Admin">
+                        <Authorized>
+                            @if (order.OrderStatus == OrderStatus.New)
+                            {
+                                <MudButton Color="Color.Primary"
+                                           Variant="Variant.Filled"
+                                           Size="Size.Small"
+                                           StartIcon="@Icons.Material.Filled.LocalShipping"
+                                           Class="mx-1"
+                                           OnClick="DispatchOrderAsync">
+                                    Despachar
+                                </MudButton>
+                            }
+                            @if (order.OrderStatus == OrderStatus.Dispatched)
+                            {
+                                <MudButton Color="Color.Warning"
+                                           Variant="Variant.Filled"
+                                           Size="Size.Small"
+                                           StartIcon="@Icons.Material.Filled.Send"
+                                           Class="mx-1"
+                                           OnClick="SendOrderAsync">
+                                    Enviar
+                                </MudButton>
+                            }
+                            @if (order.OrderStatus == OrderStatus.Sent)
+                            {
+                                <MudButton Color="Color.Dark"
+                                           Variant="Variant.Filled"
+                                           Size="Size.Small"
+                                           StartIcon="@Icons.Material.Filled.ThumbUp"
+                                           Class="mx-1"
+                                           OnClick="ConfirmOrderAsync">
+                                    Confirmar
+                                </MudButton>
+                            }
+                        </Authorized>
+                    </AuthorizeView>
+
+                    <!-- BOTÓN DE REGRESO -->
+                    <MudButton Color="Color.Success"
+                               Variant="Variant.Filled"
+                               Size="Size.Small"
+                               StartIcon="@Icons.Material.Filled.ArrowBack"
+                               Href="/orders">
+                        Regresar
+                    </MudButton>
+                </MudItem>
+            </MudGrid>
+        </MudCardHeader>
+
+        <!-- DETALLES DEL CLIENTE Y PEDIDO -->
+        <MudCardContent>
+            <MudGrid Class="mb-4">
+                <MudItem xs="12" md="2">
+                    <MudText Typo="Typo.subtitle2">Cliente</MudText>
+                    <MudText Typo="Typo.subtitle2">Documento</MudText>
+                    <MudText Typo="Typo.subtitle2">Teléfono</MudText>
+                    <MudText Typo="Typo.subtitle2">Email</MudText>
+                    <MudText Typo="Typo.subtitle2">Dirección</MudText>
+                </MudItem>
+
+                <MudItem xs="12" md="4">
+                    <MudText Typo="Typo.body2"><b>@order.User.FullName</b></MudText>
+                    <MudText Typo="Typo.body2"><b>@order.User.Document</b></MudText>
+                    <MudText Typo="Typo.body2"><b>@order.User.PhoneNumber</b></MudText>
+                    <MudText Typo="Typo.body2"><b>@order.User.UserName</b></MudText>
+                    <MudText Typo="Typo.body2"><b>@order.User.Address, @order.User.City!.Name, @order.User.City.State!.Name, @order.User.City.State.Country!.Name</b></MudText>
+                </MudItem>
+
+                <MudItem xs="12" md="2">
+                    <MudText Typo="Typo.subtitle2">Estado</MudText>
+                    <MudText Typo="Typo.subtitle2">Fecha</MudText>
+                    <MudText Typo="Typo.subtitle2">Comentarios</MudText>
+                    <MudText Typo="Typo.subtitle2">Líneas</MudText>
+                    <MudText Typo="Typo.subtitle2">Cantidad</MudText>
+                    <MudText Typo="Typo.subtitle2">Valor</MudText>
+                </MudItem>
+
+                <MudItem xs="12" md="4">
+                    <MudText Typo="Typo.body2"><b>@EnumHelper.GetEnumDescription(order.OrderStatus)</b></MudText>
+                    <MudText Typo="Typo.body2"><b>@($"{order.Date.ToLocalTime():yyyy/MM/dd hh:mm tt}")</b></MudText>
+                    <MudText Typo="Typo.body2"><b>@(string.IsNullOrEmpty(order.Remarks) ? "NA" : order.Remarks)</b></MudText>
+                    <MudText Typo="Typo.body2"><b>@order.Lines</b></MudText>
+                    <MudText Typo="Typo.body2"><b>@($"{order.Quantity:N2}")</b></MudText>
+                    <MudText Typo="Typo.body2"><b>@($"{order.Value:C2}")</b></MudText>
+                </MudItem>
+            </MudGrid>
+
+            <!-- TABLA DE DETALLES DEL PEDIDO -->
+            <MudTable Items="order.OrderDetails" Hover="true" Bordered="true" Dense="true">
+                <HeaderContent>
+                    <MudTh>Producto</MudTh>
+                    <MudTh>Imagen</MudTh>
+                    <MudTh>Comentarios</MudTh>
+                    <MudTh>Cantidad</MudTh>
+                    <MudTh>Precio</MudTh>
+                    <MudTh>Valor</MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd>@context.Product!.Name</MudTd>
+                    <MudTd><MudImage Src="@context.Product!.MainImage" Width="100" /></MudTd>
+                    <MudTd>@context.Remarks</MudTd>
+                    <MudTd>@($"{context.Quantity:N2}")</MudTd>
+                    <MudTd>@($"{context.Product!.Price:C2}")</MudTd>
+                    <MudTd>@($"{context.Value:C2}")</MudTd>
+                </RowTemplate>
+            </MudTable>
+        </MudCardContent>
+
+    </MudCard>
+}

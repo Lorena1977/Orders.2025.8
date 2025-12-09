@@ -1,0 +1,116 @@
+﻿@page "/Cart/ShowCart"
+
+@if (temporalOrders is null)
+{
+    <Loading />
+}
+else
+{
+<GenericList MyList="temporalOrders">
+    <Body>
+
+        <MudCard Class="pa-4">
+            <MudCardHeader>
+                <MudText Typo="Typo.h5">
+                    <MudIcon Icon="@Icons.Material.Filled.ShoppingCart" Class="mr-2" />
+                    Carro de Compras
+                </MudText>
+            </MudCardHeader>
+
+            <MudCardContent>
+
+                <!-- Totales -->
+                <MudGrid Class="mb-4">
+                    <MudItem xs="12" sm="6" md="4">
+                        <MudText Typo="Typo.h5">
+                            Cantidad productos: 
+                            <MudText Color="Color.Primary" Typo="Typo.h5" Class="ml-1">
+                                @($"{sumQuantity:N2}")
+                            </MudText>
+                        </MudText>
+                    </MudItem>
+
+                    <MudItem xs="12" sm="6" md="4">
+                        <MudText Typo="Typo.h5">
+                            Valor: 
+                            <MudText Color="Color.Primary" Typo="Typo.h5" Class="ml-1">
+                                @($"{sumValue:C2}")
+                            </MudText>
+                        </MudText>
+                    </MudItem>
+                </MudGrid>
+
+                <!-- Formulario -->
+                <MudForm @ref="form" Model="@OrderDTO">
+
+                    <MudTextField @bind-Value="OrderDTO.Remarks"
+                                  Label="Comentarios"
+                                  Variant="Variant.Outlined"
+                                  FullWidth="true"
+                                  Required="false" />
+
+                    <MudButton Color="Color.Primary"
+                               Variant="Variant.Filled"
+                               StartIcon="@Icons.Material.Filled.Check"
+                               Class="mt-4 mb-4"
+                               OnClick="SubmitForm">                              
+                        Confirmar Pedido
+                    </MudButton>
+                </MudForm>
+
+                <!-- Tabla -->
+                <MudTable Items="temporalOrders" Elevation="4" Dense="true" Hover="true" Class="mt-4">
+
+                    <HeaderContent>
+                        <MudTh>Nombre</MudTh>
+                        <MudTh>Descripción</MudTh>
+                        <MudTh>Cantidad</MudTh>
+                        <MudTh>Precio</MudTh>
+                        <MudTh>Valor</MudTh>
+                        <MudTh>Comentarios</MudTh>
+                        <MudTh>Imagen</MudTh>
+                        <MudTh></MudTh>
+                    </HeaderContent>
+
+                    <RowTemplate>
+                        <MudTd>@context.Product!.Name</MudTd>
+                        <MudTd>@context.Product!.Description</MudTd>
+                        <MudTd>@($"{context.Quantity:N2}")</MudTd>
+                        <MudTd>@($"{context.Product!.Price:C2}")</MudTd>
+                        <MudTd>@($"{context.Value:C2}")</MudTd>
+                        <MudTd>@context.Remarks</MudTd>
+
+                        <MudTd>
+                                <MudImage Src="@context.Product!.MainImage" Width="100" />
+                        </MudTd>
+
+                        <MudTd>
+                            <MudButton Color="Color.Warning"
+                                       Variant="Variant.Filled"
+                                       Size="Size.Small"
+                                       StartIcon="@Icons.Material.Filled.Edit"
+                                       Href="@($"/Cart/ModifyTemporalOrder/{context.Id}")"
+                                       Class="mr-2">
+                                Editar
+                            </MudButton>
+
+                            <MudButton Color="Color.Error"
+                                       Variant="Variant.Filled"
+                                       Size="Size.Small"
+                                       StartIcon="@Icons.Material.Filled.Delete"
+                                       OnClick="@(() => Delete(context.Id))">
+                                Borrar
+                            </MudButton>
+                        </MudTd>
+                    </RowTemplate>
+
+                </MudTable>
+
+            </MudCardContent>
+        </MudCard>
+
+    </Body>
+</GenericList>}
+
+
+

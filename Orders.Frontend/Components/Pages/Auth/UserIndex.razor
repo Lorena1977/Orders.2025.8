@@ -1,0 +1,87 @@
+﻿@page "/users"
+
+@if (Users is null)
+{
+    <Loading />
+}
+else
+{
+    <MudCard Class="pa-4">
+
+        <!-- HEADER -->
+        <MudCardHeader>
+            <MudGrid AlignItems="Center">
+                <MudItem xs="6">
+                    <MudText Typo="Typo.h5">
+                        <MudIcon Icon="@Icons.Material.Filled.People" Class="mr-2" />
+                        Usuarios
+                    </MudText>
+                </MudItem>
+                <MudItem xs="6" Class="d-flex justify-end">
+                    <MudButton Color="Color.Primary"
+                               Variant="Variant.Filled"
+                               Size="Size.Small"
+                               StartIcon="@Icons.Material.Filled.AddCircle"
+                               Href="/register/?IsAdmin=true">
+                        Adicionar Administrador
+                    </MudButton>
+                </MudItem>
+            </MudGrid>
+        </MudCardHeader>
+
+        <!-- BODY -->
+        <MudCardContent>
+
+            <!-- FILTRO -->
+            <MudTextField @bind-Value="filterText"
+                          Placeholder="Buscar usuario..."
+                          Variant="Variant.Outlined"
+                          Adornment="Adornment.Start"
+                          AdornmentIcon="@Icons.Material.Filled.Search"
+                          OnBlur="@(async e => await FilterCallBack(filterText))"
+                          FullWidth="true"
+                          Class="mb-4" />
+
+            <!-- TABLA -->
+            <MudTable Items="Users" Hover="true" Bordered="true" Dense="true">
+                <HeaderContent>
+                    <MudTh>Imagen</MudTh>
+                    <MudTh>Usuario</MudTh>
+                    <MudTh>Documento</MudTh>
+                    <MudTh>Teléfono</MudTh>
+                    <MudTh>Email</MudTh>
+                    <MudTh>Dirección</MudTh>
+                    <MudTh>Confirmado</MudTh>
+                    <MudTh>Tipo Usuario</MudTh>
+                </HeaderContent>
+
+                <RowTemplate>
+                    <MudTd>
+                        <MudImage Src="@context.Photo"
+                                  Width="80"
+                                  Height="80"
+                                  Style="border-radius:50%" />
+                    </MudTd>
+                    <MudTd>@context.FullName</MudTd>
+                    <MudTd>@context.Document</MudTd>
+                    <MudTd>@context.PhoneNumber</MudTd>
+                    <MudTd>@context.Email</MudTd>
+                    <MudTd>@($"{context.Address}, {context.City!.Name}, {context.City!.State!.Name}, {context.City!.State!.Country!.Name}")</MudTd>
+                    <MudTd>@context.EmailConfirmed</MudTd>
+                    <MudTd>@EnumHelper.GetEnumDescription(context.UserType)</MudTd>
+                </RowTemplate>
+            </MudTable>
+
+            <!-- PAGINACIÓN -->
+            <MudPagination Page="@currentPage"
+                           PageCount="@totalPages"
+                           Color="Color.Primary"
+                           Rounded="true"
+                           OnPageChanged="SelectedPageAsync"
+                           Class="mt-4" />
+
+        </MudCardContent>
+
+    </MudCard>
+}
+

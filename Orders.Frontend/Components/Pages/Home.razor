@@ -6,33 +6,69 @@
 }
 else
 {
-    <MudPaper Class="p-3 mb-3" Elevation="1" Style="border-radius:12px;">
-        <div class="d-flex justify-content-between align-items.center">
-            <!-- Filtro -->
-            <div class="ms-3">
-                <FilterComponent ApplyFilter="ApplyFilterAsync" />
-            </div>
+    <MudPaper Class="p-3 mb-3 mt-3" Elevation="1" Style="border-radius:12px;">
+        <!-- Botón Carro de la compra, filtro y paginación -->
+        <MudGrid>
+            <MudItem xs="12" Class="d-flex justify-content-end">
+                <AuthorizeView>
+                    <Authorized>
+                        @if (counter > 0)
+                        {
+                            <MudBadge Content="@counter" Overlap="true" Class="ml-2" Color="Color.Error" Bordered="true">
+                                <MudButton Variant="Variant.Filled"
+                                           Color="Color.Primary"
+                                           EndIcon="@Icons.Material.Filled.ShoppingCart"
+                                           Href="/Cart/ShowCart">
+                                    Ver Carro de Compras
+                                </MudButton>
+                            </MudBadge>
+                        }
+                        else
+                        {
+                            <MudButton Variant="Variant.Text"
+                                       Color="Color.Inherit"
+                                       EndIcon="@Icons.Material.Filled.ShoppingCart"
+                                       Href="/Cart/ShowCart">
+                                Ver Carro de Compras
+                            </MudButton>
+                        }
+                    </Authorized>
+                </AuthorizeView>
+            </MudItem>
 
-            <!-- Paginación -->
-            <div class="d-flex align-items-center gap-2">
-                <MudButton Variant="Variant.Filled"
-                           Color="Color.Primary"
-                           Disabled="@(currentPage == 1)"
-                           OnClick="() => SelectedPageAsync(currentPage - 1)">
-                    Anterior
-                </MudButton>
+            <MudItem xs="12">
+                <MudDivider />
+            </MudItem>
 
-                <MudText Typo="Typo.subtitle2">@currentPage / @totalPages</MudText>
+            <MudItem xs="12" Class="d-flex align-items-center">
 
-                <MudButton Variant="Variant.Filled"
-                           Color="Color.Primary"
-                           Disabled="@(currentPage == totalPages)"
-                           OnClick="() => SelectedPageAsync(currentPage + 1)">
-                    Siguiente
-                </MudButton>
-            </div>
-        </div>
-    
+                <div class="me-4">
+                    <FilterComponent ApplyFilter="ApplyFilterAsync" />
+                </div>
+
+                <MudSpacer />
+
+                <div class="d-flex align-items-center">
+                    <MudButton Variant="Variant.Filled"
+                               Color="Color.Primary"
+                               Disabled="@(currentPage == 1)"
+                               OnClick="() => SelectedPageAsync(currentPage - 1)">
+                        Anterior
+                    </MudButton>
+
+                    <MudText Typo="Typo.subtitle2" Class="mx-3">@currentPage / @totalPages</MudText>
+
+                    <MudButton Variant="Variant.Filled"
+                               Color="Color.Primary"
+                               Disabled="@(currentPage == totalPages)"
+                               OnClick="() => SelectedPageAsync(currentPage + 1)">
+                        Siguiente
+                    </MudButton>
+                </div>
+
+            </MudItem>
+
+        </MudGrid>
     </MudPaper>
 
     <!-- Grid de productos -->
@@ -42,10 +78,11 @@ else
             <MudItem xs="12" sm="6" md="4" lg="3">
                 <MudCard Class="h-100">
 
-                        <MudCardMedia Image="@product.MainImage"
+                        <MudCardMedia Image="@product.MainImage"                                     
                                       title="@product.Name" 
-                                      Height= "150">                               
-                          </MudCardMedia>
+                                      Height= "150"
+                                      style="object-fit: contain;">
+                        </MudCardMedia>
 
                     <MudCardContent>
                         <MudText Typo="Typo.h6">@product.Name</MudText>
@@ -55,14 +92,16 @@ else
                         </MudText>
                     </MudCardContent>
 
+                    <!-- Botón detalles -->
                     <MudCardActions Class="d-flex justify-content-center gap-2 mb-2">
                          <MudButton Variant="Variant.Outlined"
                                    Color="Color.Secondary"
                                    Href="@($"/products/details/{product.Id}")">
                             <MudIcon Icon="@Icons.Material.Filled.Info" Class="me-1" />
                             Detalles
-                        </MudButton> 
+                        </MudButton>
 
+                        <!-- Botón agregar -->
                         <MudButton Variant="Variant.Filled"
                                    Color="Color.Primary"
                                    OnClick="@(() => AddToCartAsync(product.Id))">

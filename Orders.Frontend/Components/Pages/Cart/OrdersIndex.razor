@@ -1,0 +1,66 @@
+﻿@page "/orders"
+
+@if (Orders is null)
+{
+    <Loading />
+}
+else
+{
+    <MudCard Class="pa-4">
+
+        <!-- HEADER -->
+        <MudCardHeader>
+            <MudText Typo="Typo.h5">
+                <MudIcon Icon="@Icons.Material.Filled.AttachMoney" Class="mr-2" />
+                Pedidos
+            </MudText>
+        </MudCardHeader>
+
+        <!-- BODY -->
+        <MudCardContent>
+
+            <!-- PAGINACIÓN -->
+            <Pagination CurrentPage="currentPage"
+                        TotalPages="totalPages"
+                        SelectedPage="SelectedPageAsync"
+                        RecordsNumber="SelectedRecordsNumberAsync" />
+
+            <!-- TABLA -->
+            <MudTable Items="Orders" Dense="true" Hover="true" Bordered="true">
+
+                <HeaderContent>
+                    <MudTh>Fecha</MudTh>
+                    <MudTh>Usuario</MudTh>
+                    <MudTh>Comentario</MudTh>
+                    <MudTh>Estado</MudTh>
+                    <MudTh>Líneas</MudTh>
+                    <MudTh>Cantidad</MudTh>
+                    <MudTh>Valor</MudTh>
+                    <MudTh></MudTh>
+                </HeaderContent>
+
+                <RowTemplate>
+                    <MudTd>@($"{context.Date:yyyy/MM/dd hh:mm tt}")</MudTd>
+                    <MudTd>@context.User!.FullName</MudTd>
+                    <MudTd>@context.Remarks</MudTd>
+                    <MudTd>@EnumHelper.GetEnumDescription(context.OrderStatus)</MudTd>
+                    <MudTd>@context.Lines</MudTd>
+                    <MudTd>@($"{context.Quantity:N2}")</MudTd>
+                    <MudTd>@($"{context.Value:C2}")</MudTd>
+                    <MudTd>
+                        <MudButton Color="Color.Info"
+                                   Variant="Variant.Filled"
+                                   Size="Size.Small"
+                                   StartIcon="@Icons.Material.Filled.Info"
+                                   Href="@($"/cart/orderDetails/{context.Id}")">                          
+                            Detalles
+                        </MudButton>
+                    </MudTd>
+                </RowTemplate>
+
+            </MudTable>
+
+        </MudCardContent>
+    </MudCard>
+}
+

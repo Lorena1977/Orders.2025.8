@@ -20,7 +20,7 @@ namespace Orders.Frontend.Components.Pages.Products
         private readonly int[] pageSizeOptions = { 10, 25, 50, int.MaxValue };//Cosecha propia
         private const string baseUrl = "api/products";//Cosecha propia
         private string infoFormat = "{first_item}-{last_item} => {all_items}";//Cosecha propia
-        
+        private string SearchText { get; set; } = string.Empty;//Cosecha propia
 
 
         [Inject] private NavigationManager NavigationManager { get; set; } = null!;
