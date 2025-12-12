@@ -24,6 +24,10 @@ namespace Orders.Backend.Controllers
         {
             _countriesUnitOfWork = countriesUnitOfWork;
         }
+
+        //Metodos específicos del CountriesController
+        //Método que obtiene todos los países.
+        //--------------------------------------------
         [HttpGet]
         public override async Task<IActionResult> GetAsync()
         {
@@ -35,6 +39,8 @@ namespace Orders.Backend.Controllers
             return BadRequest();
         }
 
+        //Método que obtiene un país por Id.
+        //------------------------------------
         [HttpGet("{id}")]
         public override async Task<IActionResult> GetAsync(int id)
         {
@@ -46,7 +52,8 @@ namespace Orders.Backend.Controllers
             return NotFound(response.Message);
         }
 
-        //Añade el Get para que muestre los paises paginados.
+        //Método que obtiene los países paginados.
+        //------------------------------------------
         [HttpGet("paginated")]
         public override async Task<IActionResult> GetAsync(PaginationDTO pagination)
         {
@@ -58,6 +65,8 @@ namespace Orders.Backend.Controllers
             return BadRequest();
         }
 
+        //Método que obtiene el total de registros de países
+        //---------------------------------------------------
         [HttpGet("totalRecords")]
         public override async Task<IActionResult> GetTotalRecordsAsync([FromQuery] PaginationDTO pagination)
         {
@@ -69,7 +78,7 @@ namespace Orders.Backend.Controllers
             return BadRequest();
         }
 
-        //Llamamos al método que obtiene el listado con los Paises.
+        //Llamamos al método que obtiene el combo con el listado de los Paises.
         [AllowAnonymous] //Agrego esto porque no tengo Token (ya que no estoy registrado). Esta instrucción no me exite Token
         [HttpGet("combo")]
         public async Task<IActionResult> GetComboAsync()

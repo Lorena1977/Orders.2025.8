@@ -26,11 +26,11 @@ namespace Orders.Backend.Data
         public DbSet<OrderDetail> OrderDetails { get; set; }
 
 
-        //Queremos en las tablas que vayaos a crear tengan un índice (en el campo Name) y que sea único para que no
+        //Queremos que en las tablas que vayamos a crear tengan un índice (en el campo Name) y que sea único para que no
         //se dupliquen los paises. Para ello, creamos el método siguiente
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder);
+            base.OnModelCreating(modelBuilder); //EntityFramework aplica configuraciones internas y automáticas
             modelBuilder.Entity<Category>().HasIndex(c => c.Name).IsUnique();//Indicamos que la tabla categoría tiene un índice único
             modelBuilder.Entity<City>().HasIndex(c => new { c.StateId, c.Name }).IsUnique();
             modelBuilder.Entity<Country>().HasIndex(c => c.Name).IsUnique(); //Indicamos que la tabla Country tiene un índice único.

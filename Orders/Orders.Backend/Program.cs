@@ -25,6 +25,37 @@ builder.Services.AddRazorComponents()
 builder.Services.AddControllers().AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 builder.Services.AddEndpointsApiExplorer();
 
+//6. Inyecto la conexión con el SqlServer
+builder.Services.AddDbContext<DataContext>(x => x.UseSqlServer("name=LocalConnection"));
+
+//22. Inyectamos los servicios.
+builder.Services.AddScoped(typeof(IGenericUnitOfWork<>), typeof(GenericUnitOfWork<>));
+builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+
+//24. Inyectamos el SeedDb
+builder.Services.AddTransient<SeedDb>();
+builder.Services.AddScoped<IApiService, ApiService>();
+
+//44. Agregamos las nuevas inyecciones de countries
+builder.Services.AddScoped<ICountriesRepository, CountriesRepository>();
+builder.Services.AddScoped<ICountriesUnitOfWork, CountriesUnitOfWork>();
+
+//52. Agregamos las nuevas inyecciones de estados
+builder.Services.AddScoped<IStatesRepository, StatesRepository>();
+builder.Services.AddScoped<IStatesUnitOfWork, StatesUnitOfWork>();
+
+//81. Agregamos las nuevas inyecciones de las ciudades
+builder.Services.AddScoped<ICitiesRepository, CitiesRepository>();
+builder.Services.AddScoped<ICitiesUnitOfWork, CitiesUnitOfWork>();
+
+//129. Agregamos las inyecciones de categorías
+builder.Services.AddScoped<ICategoriesRepository, CategoriesRepository>();
+builder.Services.AddScoped<ICategoriesUnitOfWork, CategoriesUnitOfWork>();
+
+//188. Agregamos la inyeccion de los usuarios
+builder.Services.AddScoped<IUsersRepository, UsersRepository>();
+builder.Services.AddScoped<IUsersUnitOfWork, UsersUnitOfWork>();
+
 //228. Habilitamos Tokens en el Swagger. 
 builder.Services.AddSwaggerGen(c =>
 {
@@ -58,39 +89,9 @@ builder.Services.AddSwaggerGen(c =>
         });
 });
 
-//6. Inyecto la conexión con el SqlServer
-builder.Services.AddDbContext<DataContext>(x => x.UseSqlServer("name=LocalConnection"));
-
-//22. Inyectamos los servicios 
-builder.Services.AddScoped(typeof(IGenericUnitOfWork<>), typeof(GenericUnitOfWork<>));
-builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
-
-//44. Agregamos las nuevas inyecciones de countries
-builder.Services.AddScoped<ICountriesRepository, CountriesRepository>();
-builder.Services.AddScoped<ICountriesUnitOfWork, CountriesUnitOfWork>();
-
-//52. Agregamos las nuevas inyecciones de estados
-builder.Services.AddScoped<IStatesRepository, StatesRepository>();
-builder.Services.AddScoped<IStatesUnitOfWork, StatesUnitOfWork>();
-
-//81. Agregamos las nuevas inyecciones de las ciudades
-builder.Services.AddScoped<ICitiesRepository, CitiesRepository>();
-builder.Services.AddScoped<ICitiesUnitOfWork, CitiesUnitOfWork>();
-
-//129. Agregamos las inyecciones de categorías
-builder.Services.AddScoped<ICategoriesRepository, CategoriesRepository>();
-builder.Services.AddScoped<ICategoriesUnitOfWork, CategoriesUnitOfWork>();
-
-//188. Agregamos la inyeccion de los usuarios
-builder.Services.AddScoped<IUsersRepository, UsersRepository>();
-builder.Services.AddScoped<IUsersUnitOfWork, UsersUnitOfWork>();
 
 //259. Agregamos la inyección que me permite guardar/borrar imagenes en el BlobStorage.
 builder.Services.AddScoped<IFileStorage, FileStorage>();
-
-//24. Inyectamos el SeedDb
-builder.Services.AddTransient<SeedDb>();
-builder.Services.AddScoped<IApiService, ApiService>();
 
 //300. Configuramos la inyección del servicio.
 builder.Services.AddScoped<IMailHelper, MailHelper>();

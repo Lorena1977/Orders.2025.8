@@ -12,6 +12,7 @@ namespace Orders.Shared.DTOs
         public int Page { get; set; } = 1; //Número de página que quiero que me traiga
         public int RecordsNumber { get; set; } = 10; //De a cuanto quiero paginar
         public string? Filter { get; set; }
+        public string? CategoryFilter { get; set; }
 
     }
 

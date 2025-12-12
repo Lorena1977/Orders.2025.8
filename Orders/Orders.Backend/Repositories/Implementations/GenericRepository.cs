@@ -11,8 +11,8 @@ namespace Orders.Backend.Repositories.Implementations
     {
         //1. Atributos privados.
         //---------------------
-        private readonly DataContext _context; //Inyección del context.
-        private readonly DbSet<T> _entity;
+        private readonly DataContext _context; //Inyección del context. (para que sirva para todo el ciclo de vida y no solo para el constructor).
+        private readonly DbSet<T> _entity; //Inyeccion de las entidades genéricas.
 
         //2. Constructor de la clase
         //---------------------------
@@ -24,6 +24,8 @@ namespace Orders.Backend.Repositories.Implementations
 
         //3. Métodos públicos
         //-------------------
+        //3.1. Método de Insercción
+        //--------------------------
         public virtual async Task<ActionResponse<T>> AddAsync(T entity)
         {
             _context.Add(entity); //Adiciona la entidad a la base de datos.
@@ -47,7 +49,8 @@ namespace Orders.Backend.Repositories.Implementations
             }
         }
 
-        //Método de borrado
+        //3.2. Método de Borrado
+        //--------------------------
         public virtual async Task<ActionResponse<T>> DeleteAsync(int id)
         {
             //Lo buscamos. Creamos una propiedad row y le diga que la busque en la entidad
@@ -62,8 +65,7 @@ namespace Orders.Backend.Repositories.Implementations
             }
 
             try
-            {
-                
+            {               
                 _entity.Remove(row);//si la encuentra la borramos de la base de datos
                 await _context.SaveChangesAsync(); // Salvamos los datos en la base de datos
                 return new ActionResponse<T>
@@ -81,7 +83,8 @@ namespace Orders.Backend.Repositories.Implementations
             }
         }
 
-        //Método Get con parámetros
+        //3.3. Método de obtencion por Id
+        //--------------------------------
         public virtual async Task<ActionResponse<T>> GetAsync(int id)
         {
             //lo buscamos. Creamos una propiedad row y le digo que la busque en la entidad
@@ -101,7 +104,8 @@ namespace Orders.Backend.Repositories.Implementations
             };
         }
 
-        //Método Get sin parámetros
+        //3.4. Método de obtencion de todos los registros
+        //------------------------------------------------
         public virtual async Task<ActionResponse<IEnumerable<T>>> GetAsync()
         {
             return new ActionResponse<IEnumerable<T>>
@@ -111,7 +115,8 @@ namespace Orders.Backend.Repositories.Implementations
             };
         }
 
-        //Método de actualización
+        //3.5. Método de Actualización
+        //----------------------------
         public virtual async Task<ActionResponse<T>> UpdateAsync(T entity)
         {
             try
@@ -136,7 +141,8 @@ namespace Orders.Backend.Repositories.Implementations
             }
         }
 
-        //Añadimos los métodos de la paginación
+        //3.6. Método de obtención paginada
+        //---------------------------------
         public virtual async Task<ActionResponse<IEnumerable<T>>> GetAsync(PaginationDTO pagination)
         {
             var queryable = _entity.AsQueryable();
@@ -149,6 +155,9 @@ namespace Orders.Backend.Repositories.Implementations
                     .ToListAsync()
             };
         }
+
+        //3.1. Método de obtención del total de registros
+        //--------------------------------------------------
         public virtual async Task<ActionResponse<int>> GetTotalRecordsAsync(PaginationDTO pagination)
         {
             var queryable = _entity.AsQueryable();
@@ -160,10 +169,10 @@ namespace Orders.Backend.Repositories.Implementations
             };
         }
 
-
         //4. Métodos Privados
         //------------------------
-        //Método con otra excepción diferente
+        //4.1. Método con otra excepción diferente
+        //---------------------------------------
         private ActionResponse<T> ExceptionActionResponse(Exception exception)
         {
             return new ActionResponse<T>
@@ -173,7 +182,8 @@ namespace Orders.Backend.Repositories.Implementations
             };
         }
 
-      //Método para errores en el Update de la base de datos
+      // 4.2.Método para controlar errores en el Update de la base de datos
+      //-------------------------------------------------------------------
         private ActionResponse<T> DbUpdateExceptionActionResponse()
         {
             return new ActionResponse<T>

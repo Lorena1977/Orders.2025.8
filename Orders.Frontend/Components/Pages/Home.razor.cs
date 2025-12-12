@@ -19,8 +19,11 @@ namespace Orders.Frontend.Components.Pages
         private int totalPages;
         private int counter = 0;
         private bool isAuthenticated;
-
+        private string allCategories = "all_categories_list";
         public List<Product>? Products { get; set; }
+        public List<Category>? Categories { get; set; }
+        public string CategoryFilter { get; set; } = string.Empty;
+        private string filterText = string.Empty; //Cosecha propia
         [Parameter, SupplyParameterFromQuery] public string Page { get; set; } = string.Empty;
         [Parameter, SupplyParameterFromQuery] public string Filter { get; set; } = string.Empty;
         [Inject] private NavigationManager NavigationManager { get; set; } = null!;
@@ -55,8 +58,20 @@ namespace Orders.Frontend.Components.Pages
             await LoadAsync(page);
         }
 
-        private async Task LoadAsync(int page = 1)
+        private async Task LoadAsync(int page = 1, string category = "")
         {
+            if (!string.IsNullOrWhiteSpace(category))
+            {
+                if (category == allCategories)
+                {
+                    CategoryFilter = string.Empty;
+                }
+                else
+                {
+                    CategoryFilter = category;
+                }
+            }
+
             if (!string.IsNullOrWhiteSpace(Page))
             {
                 page = Convert.ToInt32(Page);
@@ -85,6 +100,10 @@ namespace Orders.Frontend.Components.Pages
             {
                 url += $"&filter={Filter}";
             }
+            if (!string.IsNullOrEmpty(CategoryFilter))
+            {
+                url += $"&CategoryFilter={CategoryFilter}";
+            }
 
             var response = await Repository.GetAsync<List<Product>>(url);
             if (response.Error)
@@ -104,6 +123,10 @@ namespace Orders.Frontend.Components.Pages
             if (!string.IsNullOrEmpty(Filter))
             {
                 url += $"&filter={Filter}";
+            }
+            if (!string.IsNullOrEmpty(CategoryFilter))
+            {
+                url += $"&CategoryFilter={CategoryFilter}";
             }
 
             var response = await Repository.GetAsync<int>(url);
@@ -127,6 +150,7 @@ namespace Orders.Frontend.Components.Pages
         {
             await CheckIsAuthenticatedAsync();
             await LoadCounterAsync();
+            await LoadCategoriesAsync();
         }
 
         private async Task CheckIsAuthenticatedAsync()
@@ -190,7 +214,18 @@ namespace Orders.Frontend.Components.Pages
             });
             await toast2.FireAsync(icon: SweetAlertIcon.Success, message: "Producto agregado al carro de compras.");
         }
-       
+        private async Task LoadCategoriesAsync()
+        {
+            var responseHttp = await Repository.GetAsync<List<Category>>("api/categories/combo");
+            if (responseHttp.Error)
+            {
+                var message = await responseHttp.GetErrorMessageAsync();
+                await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
+            }
+
+            Categories = responseHttp.Response;
+        }
+
     }
 
 }

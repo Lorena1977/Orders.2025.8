@@ -30,7 +30,6 @@ namespace Orders.Frontend.Components.Pages.Auth
         [Inject] private ISnackbar Snackbar { get; set; } = null!;
         [Inject] private IRepository Repository { get; set; } = null!;
         [Parameter, SupplyParameterFromQuery] public bool IsAdmin { get; set; }
-
         protected override async Task OnInitializedAsync()
         {
             await LoadCountriesAsync(); //Carga los Paises (Va al API y carga el combo)
@@ -173,6 +172,11 @@ namespace Orders.Frontend.Components.Pages.Auth
             loading = true;
             userDTO.UserName = userDTO.Email;
             userDTO.UserType = UserType.User;
+            if (IsAdmin)
+            {
+                userDTO.UserType = UserType.Admin;
+            }
+
             var responseHttp = await Repository.PostAsync<UserDTO>("/api/accounts/CreateUser", userDTO);
             loading = false;
             if (responseHttp.Error)

@@ -1,5 +1,4 @@
-﻿
-<MudNavMenu>
+﻿<MudNavMenu>
     <AuthorizeView Roles="Admin">
         <Authorized>
             <MudNavLink Href="" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home">Inicio</MudNavLink>
@@ -7,14 +6,7 @@
             <MudNavLink Href="countries" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Public">Países</MudNavLink>
             <MudNavLink Href="orders" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.GifBox">Pedidos</MudNavLink>        
             <MudNavLink Href="products" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.ShoppingBag">Productos</MudNavLink>
-            <MudNavLink Href="usuarios" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.VerifiedUser">Usuarios</MudNavLink>
-
-                 
-            @* <div class="nav-item px-3">
-                <NavLink class="nav-link" href="/products">
-                    <span class="bi bi-box2-fill-nav-menu" aria-hidden="true"></span> Productos
-                </NavLink>
-            </div> *@
+            <MudNavLink Href="users" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.VerifiedUser">Usuarios</MudNavLink>
         </Authorized>
     </AuthorizeView>
     <AuthorizeView Roles="User">
@@ -25,5 +17,4 @@
         </Authorized>
     </AuthorizeView>
 </MudNavMenu>
-
 

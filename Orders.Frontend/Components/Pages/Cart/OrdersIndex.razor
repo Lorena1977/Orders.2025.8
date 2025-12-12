@@ -11,7 +11,9 @@ else
         <!-- HEADER -->
         <MudCardHeader>
             <MudText Typo="Typo.h5">
-                <MudIcon Icon="@Icons.Material.Filled.AttachMoney" Class="mr-2" />
+                <MudIcon Icon="@Icons.Material.Filled.AttachMoney" 
+                         Class="mr-2" 
+                         Style="font-weight:bold" />
                 Pedidos
             </MudText>
         </MudCardHeader>
@@ -19,23 +21,48 @@ else
         <!-- BODY -->
         <MudCardContent>
 
-            <!-- PAGINACIÓN -->
+            <!-- PAGINACIÓN
             <Pagination CurrentPage="currentPage"
                         TotalPages="totalPages"
                         SelectedPage="SelectedPageAsync"
-                        RecordsNumber="SelectedRecordsNumberAsync" />
+                        RecordsNumber="SelectedRecordsNumberAsync" /> -->
+
+
+            <MudItem xs="12" Class="d-flex align-items-center">               
+                <MudSpacer />
+                <div class="d-flex align-items-center">
+                    <MudButton Variant="Variant.Filled"
+                               Color="Color.Primary"
+                               Disabled="@(currentPage == 1)"
+                               OnClick="() => SelectedPageAsync(currentPage - 1)">
+                        Anterior
+                    </MudButton>
+
+                    <MudText Typo="Typo.subtitle2" Class="mx-3">@currentPage / @totalPages</MudText>
+
+                    <MudButton Variant="Variant.Filled"
+                               Color="Color.Primary"
+                               Disabled="@(currentPage == totalPages)"
+                               OnClick="() => SelectedPageAsync(currentPage + 1)">
+                        Siguiente
+                    </MudButton>
+                </div>
+            </MudItem>
+
+
+
 
             <!-- TABLA -->
             <MudTable Items="Orders" Dense="true" Hover="true" Bordered="true">
 
                 <HeaderContent>
-                    <MudTh>Fecha</MudTh>
-                    <MudTh>Usuario</MudTh>
-                    <MudTh>Comentario</MudTh>
-                    <MudTh>Estado</MudTh>
-                    <MudTh>Líneas</MudTh>
-                    <MudTh>Cantidad</MudTh>
-                    <MudTh>Valor</MudTh>
+                    <MudTh Style="font-weight:bold">Fecha</MudTh>
+                    <MudTh Style="font-weight:bold">Usuario</MudTh>
+                    <MudTh Style="font-weight:bold">Comentario</MudTh>
+                    <MudTh Style="font-weight:bold">Estado</MudTh>
+                    <MudTh Style="font-weight:bold">Líneas</MudTh>
+                    <MudTh Style="font-weight:bold">Cantidad</MudTh>
+                    <MudTh Style="font-weight:bold">Valor</MudTh>
                     <MudTh></MudTh>
                 </HeaderContent>
 

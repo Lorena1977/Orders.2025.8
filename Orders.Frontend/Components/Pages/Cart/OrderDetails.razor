@@ -28,6 +28,7 @@ else
                                    Size="Size.Small"
                                    StartIcon="@Icons.Material.Filled.Delete"
                                    Class="mx-1"
+                                   Style="min-width:120px"
                                    OnClick="CancelOrderAsync">
                             Cancelar
                         </MudButton>
@@ -39,6 +40,7 @@ else
                                            Size="Size.Small"
                                            StartIcon="@Icons.Material.Filled.LocalShipping"
                                            Class="mx-1"
+                                           Style="min-width:120px"
                                            OnClick="DispatchOrderAsync">
                                     Despachar
                                 </MudButton>
@@ -56,6 +58,7 @@ else
                                            Size="Size.Small"
                                            StartIcon="@Icons.Material.Filled.LocalShipping"
                                            Class="mx-1"
+                                           Style="min-width:120px"
                                            OnClick="DispatchOrderAsync">
                                     Despachar
                                 </MudButton>
@@ -67,6 +70,7 @@ else
                                            Size="Size.Small"
                                            StartIcon="@Icons.Material.Filled.Send"
                                            Class="mx-1"
+                                           Style="min-width:120px"
                                            OnClick="SendOrderAsync">
                                     Enviar
                                 </MudButton>
@@ -78,6 +82,7 @@ else
                                            Size="Size.Small"
                                            StartIcon="@Icons.Material.Filled.ThumbUp"
                                            Class="mx-1"
+                                           Style="min-width:120px"
                                            OnClick="ConfirmOrderAsync">
                                     Confirmar
                                 </MudButton>
@@ -89,6 +94,7 @@ else
                     <MudButton Color="Color.Success"
                                Variant="Variant.Filled"
                                Size="Size.Small"
+                               Style="min-width:120px"
                                StartIcon="@Icons.Material.Filled.ArrowBack"
                                Href="/orders">
                         Regresar
@@ -138,12 +144,12 @@ else
             <!-- TABLA DE DETALLES DEL PEDIDO -->
             <MudTable Items="order.OrderDetails" Hover="true" Bordered="true" Dense="true">
                 <HeaderContent>
-                    <MudTh>Producto</MudTh>
-                    <MudTh>Imagen</MudTh>
-                    <MudTh>Comentarios</MudTh>
-                    <MudTh>Cantidad</MudTh>
-                    <MudTh>Precio</MudTh>
-                    <MudTh>Valor</MudTh>
+                    <MudTh Style="font-weight:bold">Producto</MudTh>
+                    <MudTh Style="font-weight:bold">Imagen</MudTh>
+                    <MudTh Style="font-weight:bold">Comentarios</MudTh>
+                    <MudTh Style="font-weight:bold">Cantidad</MudTh>
+                    <MudTh Style="font-weight:bold">Precio</MudTh>
+                    <MudTh Style="font-weight:bold">Valor</MudTh>
                 </HeaderContent>
                 <RowTemplate>
                     <MudTd>@context.Product!.Name</MudTd>
