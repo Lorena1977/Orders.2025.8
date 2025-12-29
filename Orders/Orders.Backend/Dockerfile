@@ -1,27 +1,31 @@
-# Stage 1: Build
+# Etapa 1: Build
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+
 WORKDIR /src
 
-# Copiar proyectos necesarios dentro del contexto
-COPY Orders.Backend.csproj ./
-COPY Orders.Shared/ Orders.Shared/
+# Copiar los archivos de la solución y los proyectos
+COPY Orders.Backend.sln ./
+COPY Orders.Backend/Orders.Backend.csproj Orders.Backend/
+COPY Orders.Shared/Orders.Shared.csproj Orders.Shared/
+COPY Orders.Frontend/Orders.Frontend.csproj Orders.Frontend/
 
 # Restaurar dependencias
-RUN dotnet restore Orders.Backend.csproj
+RUN dotnet restore Orders.Backend.sln
 
-# Copiar todo el cÃ³digo de backend y shared
+# Copiar todo el código fuente
 COPY . .
 
-# Publicar backend
-RUN dotnet publish -c Release -o /app/out
+# Compilar y publicar la app en modo Release
+RUN dotnet publish Orders.Backend/Orders.Backend.csproj -c Release -o /app/publish
 
-# Stage 2: Runtime
+# Etapa 2: Runtime
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
+
 WORKDIR /app
+COPY --from=build /app/publish .
 
-# Copiar archivos publicados
-COPY --from=build /app/out .
-
-EXPOSE 5000
+# Puerto que Render asignará dinámicamente
+ENV ASPNETCORE_URLS=http://+:$PORT
 EXPOSE $PORT
+
 ENTRYPOINT ["dotnet", "Orders.Backend.dll"]
