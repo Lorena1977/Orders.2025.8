@@ -1,30 +1,30 @@
-# Etapa 1: Build
+# Etapa 1: build
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
-# Copiamos la solución y los proyectos individualmente para aprovechar cache de Docker
-COPY Orders.sln ./
+# Copiar los archivos de proyecto al contenedor
+COPY Orders.sln .
 COPY Orders.Backend/Orders.Backend.csproj Orders.Backend/
 COPY Orders.Frontend/Orders.Frontend.csproj Orders.Frontend/
-COPY Orders.Shared/Orders.Shared.csproj Orders.Shared/
+COPY Orders.Shared/ Orders.Shared/
 
-# Restauramos los paquetes NuGet
+# Restaurar dependencias
 RUN dotnet restore Orders.sln
 
-# Copiamos todo el código fuente
+# Copiar todo el código fuente
 COPY . .
 
-# Publicamos el backend
+# Build y publicación
 WORKDIR /src/Orders.Backend
-RUN dotnet publish -c Release -o /app
+RUN dotnet publish Orders.Backend.csproj -c Release -o /app --no-restore
 
-# Etapa 2: Runtime
+# Etapa 2: runtime
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
 WORKDIR /app
-COPY --from=build /app ./
+COPY --from=build /app .
 
-# Exponemos el puerto en el que corre tu aplicación
+# Puerto que expondrá Render
 EXPOSE 5000
 
-# Arrancamos la app
+# Punto de entrada
 ENTRYPOINT ["dotnet", "Orders.Backend.dll"]
