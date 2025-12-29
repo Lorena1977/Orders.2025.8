@@ -1,31 +1,23 @@
-# Etapa 1: Build
+# Imagen base para build
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
-
 WORKDIR /src
 
-# Copiar los archivos de la solución y los proyectos
-COPY Orders.Backend.sln ./
-COPY Orders.Backend/Orders.Backend.csproj Orders.Backend/
-COPY Orders.Shared/Orders.Shared.csproj Orders.Shared/
-COPY Orders.Frontend/Orders.Frontend.csproj Orders.Frontend/
+# Copiar los proyectos usando rutas relativas
+COPY ../Orders.Backend/Orders.Backend.csproj Orders.Backend/
+COPY ../Orders.Shared/ Orders.Shared/
+COPY ../Orders.Frontend/ Orders.Frontend/
 
-# Restaurar dependencias
-RUN dotnet restore Orders.Backend.sln
+# Copiar la solución completa y restaurar dependencias
+COPY ../Orders.sln .
+RUN dotnet restore Orders.sln
 
-# Copiar todo el código fuente
-COPY . .
+# Build y publish del backend
+WORKDIR /src/Orders.Backend
+RUN dotnet publish Orders.Backend.csproj -c Release -o /app/publish
 
-# Compilar y publicar la app en modo Release
-RUN dotnet publish Orders.Backend/Orders.Backend.csproj -c Release -o /app/publish
-
-# Etapa 2: Runtime
+# Imagen runtime
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
-
 WORKDIR /app
 COPY --from=build /app/publish .
-
-# Puerto que Render asignará dinámicamente
-ENV ASPNETCORE_URLS=http://+:$PORT
-EXPOSE $PORT
-
+EXPOSE 5000
 ENTRYPOINT ["dotnet", "Orders.Backend.dll"]
