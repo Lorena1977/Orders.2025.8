@@ -11,6 +11,7 @@ namespace Orders.Backend.Data
         //Creamos el constructor de la clase tal como se indica.
         public DataContext(DbContextOptions<DataContext> options) : base(options)
         {
+            Database.SetCommandTimeout(600); //Aumentamos el tiempo de espera de las consultas a 600 segundos (10 minutos)
         }
 
         //Creamos una propiedad DbSet (que es un genérico) e indico la entidad/es que quiero mapear

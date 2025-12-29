@@ -1,0 +1,29 @@
+services:
+  sqlserver-db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=TuPasswordSeguro123!
+    ports:
+      - "1433:1433"
+
+  backend-api:
+    build:
+      context: ./Orders.Backend
+      dockerfile: Dockerfile
+    depends_on:
+      - sqlserver-db
+    environment:
+      - ConnectionStrings__DefaultConnection=Server=sqlserver-db;Database=OrdersDB;User Id=sa;Password=TuPasswordSeguro123!;TrustServerCertificate=True;
+      - ASPNETCORE_URLS=http://+:8080
+    ports:
+      - "5000:8080"
+
+  frontend-blazor:
+    build:
+      context: ../../Orders.Frontend
+      dockerfile: Dockerfile
+    depends_on:
+      - backend-api
+    ports:
+      - "8081:80"

@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Orders.Backend.Data;
@@ -14,14 +15,14 @@ using Orders.Backend.UnitsOfWork.Interfaces;
 using Orders.Shared.Entities;
 using System.Text;
 using System.Text.Json.Serialization;
-
+using Npgsql.EntityFrameworkCore.PostgreSQL;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
-// Add services to the container.
+// Add services to the container. (Inyección de dependencias)
 builder.Services.AddControllers().AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 builder.Services.AddEndpointsApiExplorer();
 
@@ -160,25 +161,22 @@ void SeedData(WebApplication app)
     }
 }
 
-
-
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-
     // Esto permite que se muestren las excepciones completas en el navegador durante desarrollo
-    app.UseDeveloperExceptionPage();
+    app.UseDeveloperExceptionPage(); //Habilita la página de excepciones del desarrollador.
 
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwagger();//Habilita el middleware para generar el swagger.json
+    app.UseSwaggerUI(); //Habilita el middleware para la interfaz de usuario de swagger.
 }
 
-app.UseHttpsRedirection();
-app.UseAuthentication();
-app.UseAuthorization();
-app.UseStaticFiles(); //para servir archivos desde wwwroot
+app.UseHttpsRedirection(); //Redirige las peticiones http a https que son las que tienen certificado de seguridad.
+app.UseAuthentication(); // Habilita la autenticación
+app.UseAuthorization(); // Habilita la autorización.
+app.UseStaticFiles(); //habilita el servidor para servir archivos estáticos desde wwwroot (imagenes, css, js, etc).
 
-app.MapControllers();
+app.MapControllers(); //Mapea los controladores
 
 //habilita el consumo desde el Frontend
 app.UseCors(x => x
@@ -186,6 +184,5 @@ app.UseCors(x => x
     .AllowAnyHeader()
     .SetIsOriginAllowed(origin => true)
     .AllowCredentials());
-
 
 app.Run();
