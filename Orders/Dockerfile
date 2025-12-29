@@ -2,14 +2,19 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
-# Copiar toda la solución (Orders.Backend, Orders.Frontend, Orders.Shared)
-COPY . .
+# Copiar solo los proyectos necesarios
+COPY Orders/Orders.Backend/Orders.Backend.csproj Orders/Orders.Backend/
+COPY Orders/Orders.Shared/Orders.Shared.csproj Orders/Orders.Shared/
 
-# Restaurar dependencias de toda la solución
-RUN dotnet restore Orders.sln
-
-# Publicar el backend
+# Restaurar solo backend (y sus dependencias)
 WORKDIR /src/Orders/Orders.Backend
+RUN dotnet restore Orders.Backend.csproj
+
+# Copiar todo el código del backend y shared
+COPY Orders/Orders.Backend/ Orders/Orders.Backend/
+COPY Orders/Orders.Shared/ Orders/Orders.Shared/
+
+# Publicar backend
 RUN dotnet publish -c Release -o /app/out
 
 # Stage 2: Runtime
