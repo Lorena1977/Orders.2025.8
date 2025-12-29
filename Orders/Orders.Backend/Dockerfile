@@ -1,9 +1,3 @@
-Aquí tienes el Dockerfile completo.
-
-IMPORTANTE: Para que este archivo funcione, DEBES ir a la configuración de Render y cambiar el Root Directory a Orders. Si dejas el Root Directory vacío o en Orders.Backend, seguirá fallando.
-
-Dockerfile
-
 # ---------- Etapa de Compilación (Build Stage) ----------
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
