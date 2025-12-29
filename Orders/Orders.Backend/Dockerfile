@@ -1,24 +1,27 @@
-# Stage 1: build
+# Stage 1: Build
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
 # Copiar toda la solución desde la raíz del repo
-# El contexto en Render es Orders/Orders.Backend, por eso usamos ../../ para subir a Orders/
+# Desde Orders.Backend (Root Directory), subimos dos niveles a Orders/
 COPY ../../ ./
 
-# Restaurar dependencias
-WORKDIR /src/Orders/Orders.Backend
-RUN dotnet restore
+# Restaurar dependencias de la solución completa
+RUN dotnet restore Orders.sln
 
-# Publicar en modo Release
+# Publicar el backend
+WORKDIR /src/Orders/Orders.Backend
 RUN dotnet publish -c Release -o /app/out
 
-# Stage 2: runtime
+# Stage 2: Runtime
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
 WORKDIR /app
+
+# Copiar los archivos publicados
 COPY --from=build /app/out .
 
-# Puerto que usará la app (ajusta si tu app usa otro)
+# Exponer el puerto que tu app utiliza (ajustar si es diferente)
 EXPOSE 5000
 
+# Ejecutar la aplicación
 ENTRYPOINT ["dotnet", "Orders.Backend.dll"]
