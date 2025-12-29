@@ -1,37 +1,46 @@
-# ---------- Build Stage ----------
+Aquí tienes el Dockerfile completo.
+
+IMPORTANTE: Para que este archivo funcione, DEBES ir a la configuración de Render y cambiar el Root Directory a Orders. Si dejas el Root Directory vacío o en Orders.Backend, seguirá fallando.
+
+Dockerfile
+
+# ---------- Etapa de Compilación (Build Stage) ----------
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
-# Ahora estamos parados en la carpeta "Orders" (gracias al Root Directory de Render)
-# Copiamos la solución
+# 1. Copiar el archivo de solución
+# El contexto ahora es la carpeta /Orders gracias al cambio en Render
 COPY Orders.sln ./
 
-# Copiamos los archivos de proyecto manteniendo la estructura de carpetas
+# 2. Copiar los archivos de proyecto (.csproj) para restaurar dependencias
+# Se copian primero para aprovechar la caché de capas de Docker
 COPY Orders.Backend/Orders.Backend.csproj Orders.Backend/
 COPY Orders.Shared/Orders.Shared.csproj Orders.Shared/
 COPY Orders.Frontend/Orders.Frontend.csproj Orders.Frontend/
 
-# Restaurar dependencias de toda la solución
+# 3. Restaurar las dependencias de toda la solución
 RUN dotnet restore Orders.sln
 
-# Copiar el resto del código fuente
+# 4. Copiar el resto del código fuente de todos los proyectos necesarios
 COPY Orders.Backend/ Orders.Backend/
 COPY Orders.Shared/ Orders.Shared/
 COPY Orders.Frontend/ Orders.Frontend/
 
-# Build y publish del backend
+# 5. Compilar y publicar el proyecto Backend
 WORKDIR /src/Orders.Backend
 RUN dotnet publish Orders.Backend.csproj -c Release -o /app/publish
 
-# ---------- Runtime Stage ----------
+# ---------- Etapa de Ejecución (Runtime Stage) ----------
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
 WORKDIR /app
 
-# Copiar los archivos publicados
+# Copiar los archivos publicados desde la etapa anterior
 COPY --from=build /app/publish .
 
-# Render suele usar la variable de entorno PORT, ASP.NET la reconoce así:
+# Configuración de puertos para Render
+# Render asigna dinámicamente un puerto, ASP.NET lo detecta mediante esta variable
 ENV ASPNETCORE_URLS=http://+:10000
 EXPOSE 10000
 
+# Comando para iniciar la aplicación
 ENTRYPOINT ["dotnet", "Orders.Backend.dll"]
